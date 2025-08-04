@@ -5,9 +5,7 @@ import Home from "./components/home/Home";
 import EditRoom from "./components/room/EditRoom";
 import AddRoom from "./components/room/AddRoom";
 import NavBar from "./components/layout/NavBar";
-import Footer from "./components/layout/Footer";
 import RoomListing from "./components/room/RoomListing";
-import Admin from "./components/admin/Admin";
 import Checkout from "./components/booking/Checkout";
 import BookingSuccess from "./components/booking/BookingSuccess";
 import Bookings from "./components/booking/Bookings";
@@ -17,6 +15,8 @@ import Registration from "./components/auth/Registration";
 import Profile from "./components/auth/Profile";
 import { AuthProvider } from "./components/auth/AuthProvider";
 import RequireAuth from "./components/auth/RequireAuth";
+import AdminDashboard from "./dashboard";
+import AppFooter from "./components/layout/AppFooter";
 
 function App() {
   return (
@@ -54,7 +54,7 @@ function App() {
               path="/admin"
               element={
                 <RequireAuth adminOnly>
-                  <Admin />
+                  <AdminDashboard />
                 </RequireAuth>
               }
             />
@@ -76,7 +76,7 @@ function App() {
             <Route path="/logout" element={<FindBooking />} />
           </Routes>
         </Router>
-        <Footer />
+        <AppFooter />
       </main>
     </AuthProvider>
   );

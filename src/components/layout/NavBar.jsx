@@ -1,98 +1,91 @@
-import { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, Link, useLocation } from "react-router-dom";
+import { Layout, Menu, Dropdown, Button } from "antd";
+import {
+  UserOutlined,
+  LogoutOutlined,
+  LoginOutlined,
+  HomeOutlined,
+  AppstoreOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 import Logout from "../auth/Logout";
 
-const NavBar = () => {
-  const [showAccount, setShowAccount] = useState(false);
+const { Header } = Layout;
 
-  const handleAccountClick = () => {
-    setShowAccount(!showAccount);
-  };
+const NavBar = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const location = useLocation();
 
   const isLoggedIn = localStorage.getItem("token");
   const userRole = localStorage.getItem("userRole");
 
+  useEffect(() => {
+    setIsAdmin(userRole === "ROLE_ADMIN");
+  }, [userRole]);
+
+  if (isAdmin && location.pathname.startsWith("/admin")) return null;
+
+  const accountMenu = (
+    <Menu>
+      {isAdmin && (
+        <Menu.Item key="admin" icon={<SettingOutlined />}>
+          <Link to="/admin">Admin Panel</Link>
+        </Menu.Item>
+      )}
+      {isLoggedIn ? (
+        <Menu.Item key="logout" icon={<LogoutOutlined />}>
+          <Logout />
+        </Menu.Item>
+      ) : (
+        <Menu.Item key="login" icon={<LoginOutlined />}>
+          <Link to="/login">Login</Link>
+        </Menu.Item>
+      )}
+    </Menu>
+  );
+
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary px-5 shadow mt-5 sticky-top">
-      <div className="container-fluid">
-        <Link to={"/"} className="navbar-brand">
-          <span className="hotel-color">lakeSide Hotel</span>
+    <Header
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 999,
+        width: "100%",
+        backgroundColor: "#fff",
+        padding: "0 24px",
+        boxShadow: "0 2px 8px #f0f1f2",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        <Link to="/" className="logo">
+          lakeSide Hotel
         </Link>
 
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarScroll"
-          aria-controls="navbarScroll"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-
-        <div className="collapse navbar-collapse" id="navbarScroll">
-          <ul className="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
-            <li className="nav-item">
-              <NavLink
-                className="nav-link"
-                aria-current="page"
-                to={"/browse-all-rooms"}
-              >
-                Browse all rooms
-              </NavLink>
-            </li>
-
-            {isLoggedIn && userRole === "ROLE_ADMIN" && (
-              <li className="nav-item">
-                <NavLink className="nav-link" aria-current="page" to={"/admin"}>
-                  Admin
-                </NavLink>
-              </li>
-            )}
-          </ul>
-
-          <ul className="d-flex navbar-nav">
-            <li className="nav-item">
-              <NavLink className="nav-link" to={"/find-booking"}>
-                Find my booking
-              </NavLink>
-            </li>
-
-            <li className="nav-item dropdown">
-              <a
-                className={`nav-link dropdown-toggle ${
-                  showAccount ? "show" : ""
-                }`}
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                onClick={handleAccountClick}
-              >
-                {" "}
+        <Menu mode="horizontal" selectable={false}>
+          <Menu.Item key="browse" icon={<AppstoreOutlined />}>
+            <NavLink to="/browse-all-rooms">Browse All Rooms</NavLink>
+          </Menu.Item>
+          <Menu.Item key="booking" icon={<HomeOutlined />}>
+            <NavLink to="/find-booking">Find My Booking</NavLink>
+          </Menu.Item>
+          <Menu.Item key="account" icon={<UserOutlined />}>
+            <Dropdown overlay={accountMenu} trigger={["click"]}>
+              <Button type="text" icon={<UserOutlined />}>
                 Account
-              </a>
-
-              <ul
-                className={`dropdown-menu ${showAccount ? "show" : ""}`}
-                aria-labelledby="navbarDropdown"
-              >
-                {isLoggedIn ? (
-                  <Logout />
-                ) : (
-                  <li>
-                    <Link className="dropdown-item" to={"/login"}>
-                      Login
-                    </Link>
-                  </li>
-                )}
-              </ul>
-            </li>
-          </ul>
-        </div>
+              </Button>
+            </Dropdown>
+          </Menu.Item>
+        </Menu>
       </div>
-    </nav>
+    </Header>
   );
 };
 
