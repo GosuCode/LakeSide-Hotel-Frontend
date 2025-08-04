@@ -1,12 +1,8 @@
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import ExistingRooms from "./components/room/ExistingRooms";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/home/Home";
-import EditRoom from "./components/room/EditRoom";
-import AddRoom from "./components/room/AddRoom";
 import NavBar from "./components/layout/NavBar";
 import RoomListing from "./components/room/RoomListing";
-import Checkout from "./components/booking/Checkout";
 import BookingSuccess from "./components/booking/BookingSuccess";
 import Bookings from "./components/booking/Bookings";
 import FindBooking from "./components/booking/FindBooking";
@@ -27,42 +23,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
-              path="/edit-room/:roomId"
-              element={
-                <RequireAuth>
-                  <EditRoom />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/existing-rooms"
-              element={
-                <RequireAuth>
-                  <ExistingRooms />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/add-room"
-              element={
-                <RequireAuth>
-                  <AddRoom />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/admin"
+              path="/admin/*"
               element={
                 <RequireAuth adminOnly>
                   <AdminDashboard />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/book-room/:roomId"
-              element={
-                <RequireAuth>
-                  <Checkout />
                 </RequireAuth>
               }
             />
@@ -75,8 +39,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/logout" element={<FindBooking />} />
           </Routes>
+          <AppFooter />
         </Router>
-        <AppFooter />
       </main>
     </AuthProvider>
   );

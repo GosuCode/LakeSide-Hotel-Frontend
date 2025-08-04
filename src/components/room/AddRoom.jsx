@@ -1,144 +1,241 @@
 import { useState } from "react";
 import { addRoom } from "../utils/ApiFunctions";
-import RoomTypeSelector from "../common/RoomTypeSelector";
 import { Link } from "react-router-dom";
+import {
+  Form,
+  Input,
+  Button,
+  Upload,
+  Typography,
+  message,
+  Image,
+  Space,
+  Select,
+  Checkbox,
+} from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+
+const { Title } = Typography;
+const { Option } = Select;
+
+const roomTypes = [
+  "Single",
+  "Double",
+  "Twin",
+  "Queen",
+  "King",
+  "Suite",
+  "Deluxe",
+  "Family",
+  "Studio",
+];
+const bedTypes = [
+  "Single",
+  "Double",
+  "Queen",
+  "King",
+  "Twin",
+  "Bunk",
+  "Sofa Bed",
+  "Crib",
+];
+const categories = [
+  "Standard",
+  "Superior",
+  "Deluxe",
+  "Executive",
+  "Suite",
+  "Presidential Suite",
+  "Family",
+  "Accessible",
+];
+const amenitiesList = [
+  "Wi-Fi",
+  "Air Conditioning",
+  "TV",
+  "Mini Bar",
+  "Room Service",
+  "Balcony",
+  "Coffee Maker",
+  "Safe",
+  "Hair Dryer",
+  "Iron",
+  "Bathtub",
+  "Desk",
+  "Refrigerator",
+  "Telephone",
+  "Heating",
+  "Laundry Service",
+];
 
 const AddRoom = () => {
-  const [newRoom, setNewRoom] = useState({
-    photo: null,
-    roomType: "",
-    roomPrice: "",
-  });
-
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [form] = Form.useForm();
   const [imagePreview, setImagePreview] = useState("");
+  const [photo, setPhoto] = useState(null);
 
-  const handleRoomInputChange = (e) => {
-    const name = e.target.name;
-    let value = e.target.value;
-    if (name === "roomPrice") {
-      if (!isNaN(value)) {
-        value = parseInt(value);
-      } else {
-        value = "";
-      }
+  const handleImageChange = (info) => {
+    const file = info.file.originFileObj;
+    if (file) {
+      setPhoto(file);
+      setImagePreview(URL.createObjectURL(file));
     }
-    setNewRoom({ ...newRoom, [name]: value });
   };
 
-  const handleImageChange = (e) => {
-    const selectedImage = e.target.files[0];
-    setNewRoom({ ...newRoom, photo: selectedImage });
-    setImagePreview(URL.createObjectURL(selectedImage));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (values) => {
     try {
+      const {
+        roomType,
+        bedType,
+        roomNumber,
+        roomPrice,
+        description,
+        roomCategory,
+        amenities,
+      } = values;
+
       const success = await addRoom(
-        newRoom.photo,
-        newRoom.roomType,
-        newRoom.roomPrice
+        photo,
+        roomType,
+        roomPrice,
+        bedType,
+        roomNumber,
+        description,
+        roomCategory,
+        amenities
       );
+
       if (success !== undefined) {
-        setSuccessMessage("A new room was  added successfully !");
-        setNewRoom({ photo: null, roomType: "", roomPrice: "" });
+        message.success("A new room was added successfully!");
+        form.resetFields();
+        setPhoto(null);
         setImagePreview("");
-        setErrorMessage("");
       } else {
-        setErrorMessage("Error adding new room");
+        message.error("Error adding new room.");
       }
-    } catch (error) {
-      setErrorMessage(error.message);
+    } catch (err) {
+      message.error(err.message || "Unexpected error");
     }
-    setTimeout(() => {
-      setSuccessMessage("");
-      setErrorMessage("");
-    }, 3000);
   };
 
   return (
-    <>
-      <section className="container mt-5 mb-5">
-        <div className="row justify-content-center">
-          <div className="col-md-8 col-lg-6">
-            <h2 className="mt-5 mb-2">Add a New Room</h2>
-            {successMessage && (
-              <div className="alert alert-success fade show">
-                {" "}
-                {successMessage}
-              </div>
-            )}
+    <div style={{ maxWidth: 700, margin: "60px auto" }}>
+      <Title level={2}>Add a New Room</Title>
 
-            {errorMessage && (
-              <div className="alert alert-danger fade show">
-                {" "}
-                {errorMessage}
-              </div>
-            )}
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+        initialValues={{ amenities: [] }}
+      >
+        <Form.Item
+          label="Room Type"
+          name="roomType"
+          rules={[{ required: true }]}
+        >
+          <Select placeholder="Select room type">
+            {roomTypes.map((type) => (
+              <Option key={type} value={type}>
+                {type}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
 
-            <form onSubmit={handleSubmit}>
-              <div className="mb-3">
-                <label htmlFor="roomType" className="form-label">
-                  Room Type
-                </label>
-                <div>
-                  <RoomTypeSelector
-                    handleRoomInputChange={handleRoomInputChange}
-                    newRoom={newRoom}
-                  />
-                </div>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="roomPrice" className="form-label">
-                  Room Price
-                </label>
-                <input
-                  required
-                  type="number"
-                  className="form-control"
-                  id="roomPrice"
-                  name="roomPrice"
-                  value={newRoom.roomPrice}
-                  onChange={handleRoomInputChange}
-                />
-              </div>
+        <Form.Item label="Bed Type" name="bedType" rules={[{ required: true }]}>
+          <Select placeholder="Select bed type">
+            {bedTypes.map((bed) => (
+              <Option key={bed} value={bed}>
+                {bed}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
 
-              <div className="mb-3">
-                <label htmlFor="photo" className="form-label">
-                  Room Photo
-                </label>
-                <input
-                  required
-                  name="photo"
-                  id="photo"
-                  type="file"
-                  className="form-control"
-                  onChange={handleImageChange}
-                />
-                {imagePreview && (
-                  <img
-                    src={imagePreview}
-                    alt="Preview  room photo"
-                    style={{ maxWidth: "400px", maxHeight: "400px" }}
-                    className="mb-3"
-                  ></img>
-                )}
-              </div>
-              <div className="d-grid gap-2 d-md-flex mt-2">
-                <Link to={"/existing-rooms"} className="btn btn-outline-info">
-                  Existing rooms
-                </Link>
-                <button type="submit" className="btn btn-outline-primary ml-5">
-                  Save Room
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>
-    </>
+        <Form.Item
+          label="Room Number"
+          name="roomNumber"
+          rules={[{ required: true }]}
+        >
+          <Input type="number" placeholder="Enter room number" />
+        </Form.Item>
+
+        <Form.Item
+          label="Room Category"
+          name="roomCategory"
+          rules={[{ required: true }]}
+        >
+          <Select placeholder="Select category">
+            {categories.map((cat) => (
+              <Option key={cat} value={cat}>
+                {cat}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item label="Price" name="roomPrice" rules={[{ required: true }]}>
+          <Input type="number" placeholder="Enter price" />
+        </Form.Item>
+
+        <Form.Item
+          label="Description"
+          name="description"
+          rules={[{ required: true }]}
+        >
+          <Input.TextArea rows={4} placeholder="Enter room description" />
+        </Form.Item>
+
+        <Form.Item label="Amenities" name="amenities">
+          <Checkbox.Group>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(4, 1fr)",
+                gap: "8px",
+              }}
+            >
+              {amenitiesList.map((item) => (
+                <Checkbox key={item} value={item}>
+                  {item}
+                </Checkbox>
+              ))}
+            </div>
+          </Checkbox.Group>
+        </Form.Item>
+
+        <Form.Item label="Room Photo" required>
+          <Upload
+            accept="image/*"
+            beforeUpload={() => false}
+            onChange={handleImageChange}
+            showUploadList={false}
+          >
+            <Button icon={<UploadOutlined />}>Upload Image</Button>
+          </Upload>
+          {imagePreview && (
+            <Image
+              src={imagePreview}
+              alt="Preview"
+              style={{ marginTop: 16 }}
+              width={300}
+              height={200}
+              preview={false}
+            />
+          )}
+        </Form.Item>
+
+        <Form.Item>
+          <Space>
+            <Link to="/admin/existing-rooms">
+              <Button type="default">Existing Rooms</Button>
+            </Link>
+            <Button type="primary" htmlType="submit">
+              Save Room
+            </Button>
+          </Space>
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 

@@ -20,20 +20,32 @@ export const getJsonHeader = () => {
 };
 
 /* This function adds a new room room to the database */
-export async function addRoom(photo, roomType, roomPrice) {
+export async function addRoom(
+  photo,
+  roomType,
+  roomPrice,
+  bedType,
+  roomNumber,
+  description,
+  roomCategory,
+  amenities
+) {
   const formData = new FormData();
   formData.append("photo", photo);
   formData.append("roomType", roomType);
   formData.append("roomPrice", roomPrice);
+  formData.append("bedType", bedType);
+  formData.append("roomNumber", roomNumber);
+  formData.append("description", description);
+  formData.append("roomCategory", roomCategory);
+  formData.append("amenities", JSON.stringify(amenities));
+  formData.append("isBooked", false);
 
   const response = await api.post("/rooms/add/new-room", formData, {
     headers: getHeader(),
   });
-  if (response.status === 200 || response.status === 201) {
-    return true;
-  } else {
-    return false;
-  }
+
+  return response.status === 200 || response.status === 201;
 }
 
 /* This function gets all room types from thee database */
@@ -72,6 +84,13 @@ export async function updateRoom(roomId, roomData) {
   formData.append("roomType", roomData.roomType);
   formData.append("roomPrice", roomData.roomPrice);
   formData.append("photo", roomData.photo);
+  formData.append("bedType", roomData.bedType);
+  formData.append("roomNumber", roomData.roomNumber);
+  formData.append("description", roomData.description);
+  formData.append("roomCategory", roomData.roomCategory);
+  formData.append("amenities", JSON.stringify(roomData.amenities));
+  formData.append("isBooked", roomData.isBooked);
+
   const response = await api.put(`/rooms/update/${roomId}`, formData, {
     headers: getHeader(),
   });

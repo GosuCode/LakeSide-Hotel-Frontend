@@ -1,36 +1,44 @@
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Typography } from "antd";
 import {
   DashboardOutlined,
   BookOutlined,
   UserOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const { Sider } = Layout;
+const { Text } = Typography;
 
 export default function Sidebar() {
   return (
-    <Sider breakpoint="lg" collapsedWidth="0">
-      <div
-        className="logo"
+    <Sider
+      breakpoint="lg"
+      collapsedWidth="0"
+      style={{ backgroundColor: "#fff", borderRight: "1px solid #e0e0e0" }}
+    >
+      <Text
         style={{
-          height: 32,
-          margin: 16,
-          background: "rgba(255, 255, 255, 0.3)",
+          fontSize: 24,
+          fontWeight: "bold",
+          textAlign: "center",
+          fontFamily: "cursive",
         }}
-      />
-      <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+      >
+        Lakeside Hotel
+      </Text>
+      <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]}>
         <Menu.Item key="1" icon={<DashboardOutlined />}>
-          Dashboard
+          <Link to="/admin">Dashboard</Link>
         </Menu.Item>
-        <Menu.Item key="2" icon={<BookOutlined />}>
-          Bookings
+        <Menu.Item key="/admin/rooms" icon={<SettingOutlined />}>
+          <Link to="/admin/rooms">Rooms</Link>
         </Menu.Item>
-        <Menu.Item key="3" icon={<UserOutlined />}>
-          Customers
+        <Menu.Item key="/admin/bookings" icon={<BookOutlined />}>
+          <Link to="/admin/bookings">Bookings</Link>
         </Menu.Item>
-        <Menu.Item key="4" icon={<SettingOutlined />}>
-          Settings
+        <Menu.Item key="/admin/customers" icon={<UserOutlined />}>
+          <Link to="/admin/customers">Customers</Link>
         </Menu.Item>
       </Menu>
     </Sider>

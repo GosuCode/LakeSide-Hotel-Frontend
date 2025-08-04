@@ -11,6 +11,10 @@ body {
   --accent: #93f259;
 }
 
+a{
+  text-decoration: none;
+}
+
 .logo {
   font-size: 24px;
   font-weight: bold;
@@ -261,3 +265,9 @@ body {
 .hotel-brand-color {
   color: #dff580
 }
+
+
+.ant-card-body {
+  min-height: 150px;
+}
+
