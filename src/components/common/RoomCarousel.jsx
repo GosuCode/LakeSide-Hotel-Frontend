@@ -47,7 +47,7 @@ const RoomCarousel = () => {
                       <Link to={`/adming/book-room/${room.id}`}>
                         <Card.Img
                           variant="top"
-                          src={`data:image/png;base64, ${room.photo}`}
+                          src={room.photo}
                           alt="Room Photo"
                           className="w-100"
                           style={{ height: "200px" }}

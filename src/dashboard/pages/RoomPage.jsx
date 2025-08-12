@@ -74,7 +74,7 @@ const RoomPage = () => {
                 room.photo ? (
                   <img
                     alt={`Room ${room.roomNumber}`}
-                    src={`data:image/jpeg;base64,${room.photo}`}
+                    src={room.photo}
                     style={{ height: 200, objectFit: "cover" }}
                   />
                 ) : (

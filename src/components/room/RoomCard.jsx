@@ -7,13 +7,17 @@ const RoomCard = ({ room }) => {
     <Col key={room.id} className="mb-4" xs={12}>
       <Card>
         <Card.Body className="d-flex flex-wrap align-items-center">
-          <div className="flex-shrrink-0 mr-3 mb-3 mb-md-0">
+          <div className="flex-shrink-0 mr-3 mb-3 mb-md-0">
             <Link to={`/book-room/${room.id}`}>
               <Card.Img
                 variant="top"
-                src={`data:image/png;base64, ${room.photo}`}
+                src={room.photo}
                 alt="Room Photo"
-                style={{ width: "100%", maxWidth: "200px", height: "auto" }}
+                style={{ width: "100%", maxWidth: "200px", height: "200px" }}
+                onError={(e) => {
+                  e.target.src =
+                    "https://via.placeholder.com/200x150?text=Image+Error";
+                }}
               />
             </Link>
           </div>
@@ -42,7 +46,7 @@ export default RoomCard;
 RoomCard.propTypes = {
   room: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    photo: PropTypes.string.isRequired,
+    photo: PropTypes.string,
     roomType: PropTypes.string.isRequired,
     roomPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
       .isRequired,

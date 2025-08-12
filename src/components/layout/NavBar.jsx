@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { NavLink, Link, useLocation } from "react-router-dom";
-import { Layout, Menu, Dropdown, Button } from "antd";
+import { Layout, Dropdown, Button } from "antd";
 import {
   UserOutlined,
   LogoutOutlined,
   LoginOutlined,
-  HomeOutlined,
-  AppstoreOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
 import Logout from "../auth/Logout";
@@ -24,26 +22,41 @@ const NavBar = () => {
     setIsAdmin(userRole === "ROLE_ADMIN");
   }, [userRole]);
 
+  // Hide navbar in admin pages if admin
   if (isAdmin && location.pathname.startsWith("/admin")) return null;
 
-  const accountMenu = (
-    <Menu>
-      {isAdmin && (
-        <Menu.Item key="admin" icon={<SettingOutlined />}>
-          <Link to="/admin">Admin Panel</Link>
-        </Menu.Item>
-      )}
-      {isLoggedIn ? (
-        <Menu.Item key="logout" icon={<LogoutOutlined />}>
-          <Logout />
-        </Menu.Item>
-      ) : (
-        <Menu.Item key="login" icon={<LoginOutlined />}>
-          <Link to="/login">Login</Link>
-        </Menu.Item>
-      )}
-    </Menu>
-  );
+  // AntD v5 Dropdown items
+  const accountMenuItems = [
+    ...(isAdmin
+      ? [
+          {
+            key: "admin",
+            icon: <SettingOutlined />,
+            label: <Link to="/admin">Admin Panel</Link>,
+          },
+        ]
+      : []),
+    ...(isLoggedIn
+      ? [
+          {
+            key: "profile",
+            icon: <UserOutlined />,
+            label: <Link to="/profile">Profile</Link>,
+          },
+          {
+            key: "logout",
+            icon: <LogoutOutlined />,
+            label: <Logout />,
+          },
+        ]
+      : [
+          {
+            key: "login",
+            icon: <LoginOutlined />,
+            label: <Link to="/login">Login</Link>,
+          },
+        ]),
+  ];
 
   return (
     <Header
@@ -53,7 +66,6 @@ const NavBar = () => {
         zIndex: 999,
         width: "100%",
         backgroundColor: "#fff",
-        padding: "0 24px",
         boxShadow: "0 2px 8px #f0f1f2",
       }}
     >
@@ -62,28 +74,33 @@ const NavBar = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          padding: "0 24px",
           height: "100%",
         }}
       >
         <Link to="/" className="logo">
           lakeSide Hotel
         </Link>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <NavLink
+            to="/browse-all-rooms"
+            style={{ marginRight: "20px", color: "#000" }}
+          >
+            Browse Rooms
+          </NavLink>
+          <NavLink
+            to="/find-booking"
+            style={{ marginRight: "20px", color: "#000" }}
+          >
+            My Bookings
+          </NavLink>
 
-        <Menu mode="horizontal" selectable={false}>
-          <Menu.Item key="browse" icon={<AppstoreOutlined />}>
-            <NavLink to="/browse-all-rooms">Browse All Rooms</NavLink>
-          </Menu.Item>
-          <Menu.Item key="booking" icon={<HomeOutlined />}>
-            <NavLink to="/find-booking">Find My Booking</NavLink>
-          </Menu.Item>
-          <Menu.Item key="account" icon={<UserOutlined />}>
-            <Dropdown overlay={accountMenu} trigger={["click"]}>
-              <Button type="text" icon={<UserOutlined />}>
-                Account
-              </Button>
-            </Dropdown>
-          </Menu.Item>
-        </Menu>
+          <Dropdown menu={{ items: accountMenuItems }} trigger={["click"]}>
+            <Button type="text" icon={<UserOutlined />}>
+              Account
+            </Button>
+          </Dropdown>
+        </div>
       </div>
     </Header>
   );
