@@ -244,3 +244,44 @@ export async function getBookingsByUserId(userId) {
   });
   return response.data;
 }
+
+/* This function gets room pricing with dynamic adjustments */
+export async function getRoomPricing(roomId, checkIn, checkOut) {
+  try {
+    const response = await api.get(`/rooms/pricing/${roomId}`, {
+      params: { checkIn, checkOut },
+      headers: getHeader(),
+    });
+
+    // console.log("🔍 API Debug - Backend response:", response.data);
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      throw new Error(
+        "Authentication required. Please log in to view pricing."
+      );
+    } else if (error.response?.status === 400) {
+      throw new Error("Invalid request. Please check your dates.");
+    } else if (error.response?.status === 404) {
+      throw new Error("Room not found.");
+    } else {
+      throw new Error("Error fetching room pricing. Please try again.");
+    }
+  }
+}
+
+/* This function gets all rooms with pricing for a date range */
+export async function getRoomsWithPricing(checkIn, checkOut, roomType = null) {
+  try {
+    const params = { checkIn, checkOut };
+    if (roomType) params.roomType = roomType;
+
+    const response = await api.get("/rooms/search-with-pricing", {
+      params,
+      headers: getHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error fetching rooms with pricing");
+  }
+}
