@@ -90,6 +90,12 @@ const NavBar = () => {
             Browse Rooms
           </NavLink>
           <NavLink
+            to="/nearby-hotels"
+            style={{ marginRight: "20px", color: "#000" }}
+          >
+            Nearby Hotels
+          </NavLink>
+          <NavLink
             to="/find-booking"
             style={{ marginRight: "20px", color: "#000" }}
           >

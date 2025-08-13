@@ -83,6 +83,8 @@ const AddHotel = () => {
           initialValues={{
             name: "",
             address: "",
+            latitude: "",
+            longitude: "",
             contact: "",
             email: "",
             website: "",
@@ -119,6 +121,52 @@ const AddHotel = () => {
               placeholder="Enter complete hotel address"
               rows={3}
               size="large"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="latitude"
+            label="Latitude"
+            rules={[
+              { required: true, message: "Please enter the latitude!" },
+              {
+                type: "number",
+                min: -90,
+                max: 90,
+                message: "Latitude must be between -90 and 90!",
+              },
+            ]}
+          >
+            <InputNumber
+              prefix={<EnvironmentOutlined />}
+              placeholder="Enter latitude (e.g., 40.7128)"
+              size="large"
+              style={{ width: "100%" }}
+              step="any"
+              precision={6}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="longitude"
+            label="Longitude"
+            rules={[
+              { required: true, message: "Please enter the longitude!" },
+              {
+                type: "number",
+                min: -180,
+                max: 180,
+                message: "Longitude must be between -180 and 180!",
+              },
+            ]}
+          >
+            <InputNumber
+              prefix={<EnvironmentOutlined />}
+              placeholder="Enter longitude (e.g., -74.0060)"
+              size="large"
+              style={{ width: "100%" }}
+              step="any"
+              precision={6}
             />
           </Form.Item>
 

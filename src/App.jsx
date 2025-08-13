@@ -6,6 +6,7 @@ import NavBar from "./components/layout/NavBar";
 import RoomListing from "./components/room/RoomListing";
 import RoomDetails from "./components/room/RoomDetails";
 import HotelDetails from "./components/hotel/HotelDetails";
+import NearbyHotelsSearch from "./components/hotel/NearbyHotelsSearch";
 import BookingSuccess from "./components/booking/BookingSuccess";
 import Bookings from "./components/booking/Bookings";
 import FindBooking from "./components/booking/FindBooking";
@@ -37,6 +38,7 @@ function App() {
             />
             <Route path="/room/:roomId" element={<RoomDetails />} />
             <Route path="/hotel/:id" element={<HotelDetails />} />
+            <Route path="/nearby-hotels" element={<NearbyHotelsSearch />} />
             <Route path="/browse-all-rooms" element={<RoomListing />} />
             <Route path="/book-room/:roomId" element={<Checkout />} />
             <Route path="/booking-success" element={<BookingSuccess />} />
