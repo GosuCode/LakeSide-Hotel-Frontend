@@ -126,7 +126,9 @@ const RoomForm = () => {
 
       // Set image preview if photo exists
       if (roomData.photo) {
-        setImagePreview(`data:image/jpeg;base64,${roomData.photo}`);
+        setImagePreview(`${roomData.photo}`);
+        // Store the existing photo URL for updates
+        setPhoto(roomData.photo);
       }
     } catch (error) {
       message.error("Failed to fetch room data");
@@ -173,6 +175,14 @@ const RoomForm = () => {
 
   const handleSubmit = async (values) => {
     try {
+      // Check if user is logged in
+      const token = localStorage.getItem("token");
+      if (!token) {
+        message.error("You are not logged in. Please login again.");
+        navigate("/login");
+        return;
+      }
+
       if (imageUploading) {
         message.warning("Please wait for image upload to complete");
         return;
@@ -194,19 +204,24 @@ const RoomForm = () => {
       let photoUrl = null;
 
       if (photo) {
-        try {
-          setImageUploading(true);
-
-          photoUrl = await uploadImageToCloudinary(photo);
-        } catch (uploadError) {
-          message.error(
-            uploadError.message || "Failed to upload image. Please try again."
-          );
-          setUploading(false);
-          setImageUploading(false);
-          return;
-        } finally {
-          setImageUploading(false);
+        // Check if photo is a File (new upload) or string (existing URL)
+        if (photo instanceof File) {
+          try {
+            setImageUploading(true);
+            photoUrl = await uploadImageToCloudinary(photo);
+          } catch (uploadError) {
+            message.error(
+              uploadError.message || "Failed to upload image. Please try again."
+            );
+            setUploading(false);
+            setImageUploading(false);
+            return;
+          } finally {
+            setImageUploading(false);
+          }
+        } else {
+          // Photo is already a URL string, use it directly
+          photoUrl = photo;
         }
       }
 

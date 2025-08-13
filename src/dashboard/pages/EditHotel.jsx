@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Form,
   Input,
@@ -9,6 +9,7 @@ import {
   Space,
   message,
   InputNumber,
+  Spin,
 } from "antd";
 import {
   HomeOutlined,
@@ -22,28 +23,55 @@ import {
   FileTextOutlined,
   NumberOutlined,
 } from "@ant-design/icons";
-import { addHotel } from "../../components/utils/ApiFunctions";
+import { getHotelById, updateHotel } from "../../components/utils/ApiFunctions";
 import toast from "react-hot-toast";
 
 const { Title } = Typography;
 const { TextArea } = Input;
 
-const AddHotel = () => {
+const EditHotel = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    fetchHotel();
+  }, [id]);
+
+  const fetchHotel = async () => {
+    try {
+      const hotel = await getHotelById(id);
+      form.setFieldsValue({
+        name: hotel.name,
+        address: hotel.address,
+        contact: hotel.contact,
+        email: hotel.email,
+        website: hotel.website,
+        roomsCount: hotel.roomsCount,
+        description: hotel.description,
+        imageUrl: hotel.imageUrl,
+      });
+    } catch (error) {
+      toast.error("Failed to fetch hotel details");
+      message.error("Failed to fetch hotel details");
+      navigate("/admin/hotels");
+    } finally {
+      setFetching(false);
+    }
+  };
 
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      await addHotel(values);
-      toast.success("Hotel added successfully!");
-      message.success("Hotel added successfully!");
-      form.resetFields();
+      await updateHotel(id, values);
+      toast.success("Hotel updated successfully!");
+      message.success("Hotel updated successfully!");
       navigate("/admin/hotels");
     } catch (error) {
-      toast.error("Failed to add hotel. Please try again.");
-      message.error("Failed to add hotel. Please try again.");
+      toast.error("Failed to update hotel. Please try again.");
+      message.error("Failed to update hotel. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -54,6 +82,14 @@ const AddHotel = () => {
     toast.error("Please check your form and try again.");
   };
 
+  if (fetching) {
+    return (
+      <div style={{ textAlign: "center", padding: "50px" }}>
+        <Spin size="large" tip="Loading hotel details..." />
+      </div>
+    );
+  }
+
   return (
     <div style={{ padding: "24px", maxWidth: "900px", margin: "0 auto" }}>
       <Card
@@ -61,7 +97,7 @@ const AddHotel = () => {
           <Space>
             <HomeOutlined style={{ color: "#1890ff" }} />
             <Title level={3} style={{ margin: 0 }}>
-              Add New Hotel
+              Edit Hotel
             </Title>
           </Space>
         }
@@ -80,16 +116,6 @@ const AddHotel = () => {
           layout="vertical"
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
-          initialValues={{
-            name: "",
-            address: "",
-            contact: "",
-            email: "",
-            website: "",
-            roomsCount: 0,
-            description: "",
-            imageUrl: "",
-          }}
         >
           <Form.Item
             name="name"
@@ -236,14 +262,14 @@ const AddHotel = () => {
                   fontSize: "16px",
                 }}
               >
-                {loading ? "Adding Hotel..." : "Add Hotel"}
+                {loading ? "Updating Hotel..." : "Update Hotel"}
               </Button>
               <Button
                 size="large"
-                onClick={() => form.resetFields()}
+                onClick={() => navigate("/admin/hotels")}
                 disabled={loading}
               >
-                Reset Form
+                Cancel
               </Button>
             </Space>
           </Form.Item>
@@ -253,4 +279,4 @@ const AddHotel = () => {
   );
 };
 
-export default AddHotel;
+export default EditHotel;

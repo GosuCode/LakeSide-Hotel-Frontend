@@ -23,6 +23,10 @@ import {
   SearchOutlined,
   EnvironmentOutlined,
   PhoneOutlined,
+  MailOutlined,
+  GlobalOutlined,
+  FileTextOutlined,
+  PictureOutlined,
 } from "@ant-design/icons";
 import {
   getAllHotels,
@@ -123,11 +127,62 @@ const Hotels = () => {
       ),
     },
     {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      render: (email) => (
+        <Space>
+          <MailOutlined style={{ color: "#faad14" }} />
+          <Text>{email || "N/A"}</Text>
+        </Space>
+      ),
+    },
+    {
+      title: "Website",
+      dataIndex: "website",
+      key: "website",
+      render: (website) => (
+        <Space>
+          <GlobalOutlined style={{ color: "#13c2c2" }} />
+          <Text>
+            <a href={website} target="_blank" rel="noopener noreferrer">
+              {website || "N/A"}
+            </a>
+          </Text>
+        </Space>
+      ),
+    },
+    {
       title: "Rooms",
-      dataIndex: "rooms",
-      key: "rooms",
-      render: (rooms) => (
-        <Tag color="blue">{rooms ? rooms.length : 0} rooms</Tag>
+      dataIndex: "roomsCount",
+      key: "roomsCount",
+      render: (roomsCount) => <Tag color="blue">{roomsCount || 0} rooms</Tag>,
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      render: (description) => (
+        <Space>
+          <FileTextOutlined style={{ color: "#eb2f96" }} />
+          <Text>{description || "No description available."}</Text>
+        </Space>
+      ),
+      ellipsis: true,
+    },
+    {
+      title: "Image",
+      dataIndex: "imageUrl",
+      key: "imageUrl",
+      render: (imageUrl) => (
+        <Space>
+          <PictureOutlined style={{ color: "#52c41a" }} />
+          <Text>
+            <a href={imageUrl} target="_blank" rel="noopener noreferrer">
+              {imageUrl ? "View Image" : "No Image"}
+            </a>
+          </Text>
+        </Space>
       ),
     },
     {
@@ -167,14 +222,11 @@ const Hotels = () => {
 
   const stats = {
     totalHotels: hotels.length,
-    totalRooms: hotels.reduce(
-      (sum, hotel) => sum + (hotel.rooms?.length || 0),
-      0
-    ),
+    totalRooms: hotels.reduce((sum, hotel) => sum + (hotel.roomsCount || 0), 0),
     averageRoomsPerHotel:
       hotels.length > 0
         ? (
-            hotels.reduce((sum, hotel) => sum + (hotel.rooms?.length || 0), 0) /
+            hotels.reduce((sum, hotel) => sum + (hotel.roomsCount || 0), 0) /
             hotels.length
           ).toFixed(1)
         : 0,

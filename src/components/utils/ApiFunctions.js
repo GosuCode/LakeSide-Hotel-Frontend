@@ -96,8 +96,9 @@ export async function updateRoom(roomId, roomData) {
     hotel: roomData.hotel,
   };
 
-  const response = await api.put(`/rooms/update/${roomId}`, updateData, {
-    headers: getJsonHeader(),
+  const headers = getJsonHeader();
+  const response = await api.put(`/rooms/update-full/${roomId}`, updateData, {
+    headers,
   });
   return response;
 }

@@ -4,11 +4,11 @@ import Sidebar from "./components/sidebar";
 import Navbar from "./components/navbar";
 import DashboardContent from "./dashboardContent";
 import RoomPage from "./pages/RoomPage";
-import AddRoom from "../components/room/AddRoom";
+import RoomForm from "../components/room/RoomForm";
 import ExistingRooms from "../components/room/ExistingRooms";
-import EditRoom from "../components/room/EditRoom";
 import Hotels from "./pages/Hotels";
 import AddHotel from "./pages/AddHotel";
+import EditHotel from "./pages/EditHotel";
 
 const { Content } = Layout;
 const AdminDashboard = () => {
@@ -28,10 +28,11 @@ const AdminDashboard = () => {
             <Route path="/" element={<DashboardContent />} />
             <Route path="/hotels" element={<Hotels />} />
             <Route path="/hotels/add" element={<AddHotel />} />
+            <Route path="/hotels/edit/:hotelId" element={<EditHotel />} />
             <Route path="/rooms" element={<RoomPage />} />
-            <Route path="/add-room" element={<AddRoom />} />
+            <Route path="/add-room" element={<RoomForm />} />
             <Route path="/existing-rooms" element={<ExistingRooms />} />
-            <Route path="/edit-room/:roomId" element={<EditRoom />} />
+            <Route path="/edit-room/:roomId" element={<RoomForm />} />
           </Routes>
         </Content>
       </Layout>

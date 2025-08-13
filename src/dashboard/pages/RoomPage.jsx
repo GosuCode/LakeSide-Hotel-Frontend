@@ -77,6 +77,7 @@ const RoomPage = () => {
                     alt={`Room ${room.roomNumber}`}
                     src={room.photo}
                     style={{ height: 200, objectFit: "cover" }}
+                    className="bg-dark-subtle"
                   />
                 ) : (
                   <div
@@ -88,7 +89,9 @@ const RoomPage = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <Text type="secondary">No Image</Text>
+                    <Text type="secondary" className="">
+                      No Image
+                    </Text>
                   </div>
                 )
               }
@@ -102,9 +105,30 @@ const RoomPage = () => {
               ]}
             >
               <Card.Meta
-                title={`Room ${room.roomNumber} - ${room.roomType}`}
+                title={
+                  <div
+                    style={{
+                      marginBottom: 12,
+                      padding: "8px 0",
+                      borderBottom: "1px solid #f0f0f0",
+                    }}
+                  >
+                    <Title
+                      level={5}
+                      style={{ margin: "0 0 4px", color: "#1890ff" }}
+                    >
+                      🏨 {room.hotel.name}
+                    </Title>
+                    <Text type="secondary" style={{ fontSize: "12px" }}>
+                      📍 {room.hotel.address}
+                    </Text>
+                  </div>
+                }
                 description={
                   <div>
+                    <Paragraph>
+                      {`Room ${room.roomNumber} - ${room.roomType}`}
+                    </Paragraph>
                     <Paragraph style={{ marginBottom: 8 }}>
                       <Text strong>Price: </Text>${room.roomPrice}
                     </Paragraph>

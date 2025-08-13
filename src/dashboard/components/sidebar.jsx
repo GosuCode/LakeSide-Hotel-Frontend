@@ -1,10 +1,11 @@
 import { Layout, Menu, Typography } from "antd";
 import {
   DashboardOutlined,
-  BookOutlined,
-  UserOutlined,
-  SettingOutlined,
-  HomeOutlined,
+  ApartmentOutlined,
+  BuildOutlined,
+  ScheduleOutlined,
+  TeamOutlined,
+  GlobalOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
@@ -32,17 +33,20 @@ export default function Sidebar() {
         <Menu.Item key="1" icon={<DashboardOutlined />}>
           <Link to="/admin">Dashboard</Link>
         </Menu.Item>
-        <Menu.Item key="/admin/hotels" icon={<HomeOutlined />}>
+        <Menu.Item key="/admin/hotels" icon={<ApartmentOutlined />}>
           <Link to="/admin/hotels">Hotels</Link>
         </Menu.Item>
-        <Menu.Item key="/admin/rooms" icon={<SettingOutlined />}>
+        <Menu.Item key="/admin/rooms" icon={<BuildOutlined />}>
           <Link to="/admin/rooms">Rooms</Link>
         </Menu.Item>
-        <Menu.Item key="/admin/bookings" icon={<BookOutlined />}>
+        <Menu.Item key="/admin/bookings" icon={<ScheduleOutlined />}>
           <Link to="/admin/bookings">Bookings</Link>
         </Menu.Item>
-        <Menu.Item key="/admin/customers" icon={<UserOutlined />}>
+        <Menu.Item key="/admin/customers" icon={<TeamOutlined />}>
           <Link to="/admin/customers">Customers</Link>
+        </Menu.Item>
+        <Menu.Item key="/" icon={<GlobalOutlined />}>
+          <Link to="/">Home Page</Link>
         </Menu.Item>
       </Menu>
     </Sider>
