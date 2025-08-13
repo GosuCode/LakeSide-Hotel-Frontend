@@ -95,7 +95,12 @@ const Checkout = () => {
     amenities && amenities.length > 0 ? amenities : defaultAmenities;
 
   return (
-    <div style={{ padding: "24px 48px" }}>
+    <div
+      style={{
+        padding: "24px 48px",
+        marginTop: 40,
+      }}
+    >
       <Row gutter={[32, 32]}>
         {/* Room Image and Details */}
         <Col xs={24} md={10}>

@@ -18,6 +18,7 @@ import {
   LockOutlined,
   SolutionOutlined,
 } from "@ant-design/icons";
+import { GMAIL_REGEX } from "../utils/constants";
 
 const { Title, Text } = Typography;
 
@@ -32,9 +33,6 @@ const Registration = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const GMAIL_REGEX =
-    /^[A-Za-z](?:[A-Za-z0-9]*(?:\.[A-Za-z0-9]+)*)?(?:\+[A-Za-z0-9_-]+)?@(gmail)\.com$/;
 
   const handleInputChange = (e) => {
     setRegistration({ ...registration, [e.target.name]: e.target.value });

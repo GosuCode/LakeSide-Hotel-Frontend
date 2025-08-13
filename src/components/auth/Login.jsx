@@ -5,6 +5,7 @@ import { useAuth } from "./AuthProvider";
 import toast from "react-hot-toast";
 import { Form, Input, Button, Typography, Card, Spin, Space } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
+import { GMAIL_REGEX } from "../utils/constants";
 
 const { Title, Text } = Typography;
 
@@ -15,9 +16,6 @@ const Login = () => {
     email: "",
     password: "",
   });
-
-  const GMAIL_REGEX =
-    /^[A-Za-z](?:[A-Za-z0-9]*(?:\.[A-Za-z0-9]+)*)?(?:\+[A-Za-z0-9_-]+)?@(gmail)\.com$/;
 
   const navigate = useNavigate();
   const auth = useAuth();

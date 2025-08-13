@@ -14,6 +14,7 @@ import { AuthProvider } from "./components/auth/AuthProvider";
 import RequireAuth from "./components/auth/RequireAuth";
 import AdminDashboard from "./dashboard";
 import AppFooter from "./components/layout/AppFooter";
+import Checkout from "./components/booking/Checkout";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
               }
             />
             <Route path="/browse-all-rooms" element={<RoomListing />} />
+            <Route path="/book-room/:roomId" element={<Checkout />} />
             <Route path="/booking-success" element={<BookingSuccess />} />
             <Route path="/existing-bookings" element={<Bookings />} />
             <Route path="/find-booking" element={<FindBooking />} />

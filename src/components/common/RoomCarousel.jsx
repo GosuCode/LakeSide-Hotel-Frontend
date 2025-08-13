@@ -113,7 +113,7 @@ const RoomCarousel = () => {
                 Rs. {room.roomPrice} / night
               </Text>
               <div style={{ marginTop: 12 }}>
-                <Link to={`/admin/book-room/${room.id}`}>
+                <Link to={`/book-room/${room.id}`}>
                   <Button
                     style={{
                       background: "#ee212a",

@@ -7,7 +7,6 @@ import RoomPage from "./pages/RoomPage";
 import AddRoom from "../components/room/AddRoom";
 import ExistingRooms from "../components/room/ExistingRooms";
 import EditRoom from "../components/room/EditRoom";
-import Checkout from "../components/booking/Checkout";
 import Hotels from "./pages/Hotels";
 import AddHotel from "./pages/AddHotel";
 
@@ -33,7 +32,6 @@ const AdminDashboard = () => {
             <Route path="/add-room" element={<AddRoom />} />
             <Route path="/existing-rooms" element={<ExistingRooms />} />
             <Route path="/edit-room/:roomId" element={<EditRoom />} />
-            <Route path="/book-room/:roomId" element={<Checkout />} />
           </Routes>
         </Content>
       </Layout>

@@ -208,7 +208,6 @@ export async function bookRoom(roomId, booking) {
   }
 }
 
-/* This function gets alll bokings from the database */
 export async function getAllBookings() {
   try {
     const result = await api.get("/bookings/all-bookings", {
@@ -220,7 +219,6 @@ export async function getAllBookings() {
   }
 }
 
-/* This function get booking by the cnfirmation code */
 export async function getBookingByConfirmationCode(confirmationCode) {
   try {
     const result = await api.get(`/bookings/confirmation/${confirmationCode}`);
@@ -234,7 +232,6 @@ export async function getBookingByConfirmationCode(confirmationCode) {
   }
 }
 
-/* This is the function to cancel user booking */
 export async function cancelBooking(bookingId) {
   try {
     const result = await api.delete(`/bookings/booking/${bookingId}/delete`, {
@@ -246,7 +243,6 @@ export async function cancelBooking(bookingId) {
   }
 }
 
-/* This function gets all availavle rooms from the database with a given date and a room type */
 export async function getAvailableRooms(checkInDate, checkOutDate, roomType) {
   const result = await api.get(
     `/rooms/available-rooms?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&roomType=${roomType}`
@@ -254,13 +250,13 @@ export async function getAvailableRooms(checkInDate, checkOutDate, roomType) {
   return result;
 }
 
-/* This function register a new user */
 export async function registerUser(registration) {
   try {
     const response = await api.post("/auth/register-user", registration, {
-      headers: getJsonHeader(),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
-    console.log(response, "Response");
     return response.data;
   } catch (error) {
     if (error.response && error.response.data) {
@@ -271,11 +267,12 @@ export async function registerUser(registration) {
   }
 }
 
-/* This function login a registered user */
 export async function loginUser(login) {
   try {
     const response = await api.post("/auth/login", login, {
-      headers: getJsonHeader(),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     if (response.status >= 200 && response.status < 300) {
       return response.data;

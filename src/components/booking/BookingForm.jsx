@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import BookingSummary from "./BookingSummary";
 import { bookRoom, getRoomById, getRoomPricing } from "../utils/ApiFunctions";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { GMAIL_REGEX } from "../utils/constants";
 
 const { RangePicker } = DatePicker;
 const { Title } = Typography;
@@ -158,10 +159,11 @@ const BookingForm = () => {
               label="Email"
               name="guestEmail"
               rules={[
+                { required: true, message: "Please enter your email!" },
                 {
-                  required: true,
-                  type: "email",
-                  message: "Enter a valid email",
+                  pattern: GMAIL_REGEX,
+                  message:
+                    "Use a valid Gmail address, e.g. john.doe+notes@gmail.com",
                 },
               ]}
             >
@@ -228,7 +230,7 @@ const BookingForm = () => {
         </Card>
 
         <div style={{ flex: 1 }}>
-          {isSubmitted && (
+          {isSubmitted ? (
             <BookingSummary
               booking={booking}
               payment={calculatePayment()}
@@ -236,6 +238,10 @@ const BookingForm = () => {
               isFormValid={true}
               dynamicPricing={dynamicPricing}
             />
+          ) : (
+            <div className="w-100 h-100 bg-body-secondary text-center flex-column align-content-center">
+              Continue to View your booking summary
+            </div>
           )}
         </div>
       </div>
