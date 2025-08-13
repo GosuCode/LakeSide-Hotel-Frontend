@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
-import { getRoomById, updateRoom } from "../utils/ApiFunctions";
+import { useState, useEffect } from "react";
+import { getRoomById, updateRoom, getAllHotels } from "../utils/ApiFunctions";
 import { Link, useParams } from "react-router-dom";
 import {
   Form,
   Input,
   Button,
-  Upload,
   Typography,
-  message,
-  Image,
   Space,
   Select,
-  Card,
   Spin,
+  Card,
+  Upload,
+  Image,
 } from "antd";
-import { UploadOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, UploadOutlined } from "@ant-design/icons";
+import toast from "react-hot-toast";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -60,11 +60,22 @@ const EditRoom = () => {
   const [saving, setSaving] = useState(false);
   const [imagePreview, setImagePreview] = useState("");
   const [photo, setPhoto] = useState(null);
+  const [hotels, setHotels] = useState([]);
   const { roomId } = useParams();
 
   useEffect(() => {
     fetchRoom();
+    fetchHotels();
   }, [roomId]);
+
+  const fetchHotels = async () => {
+    try {
+      const hotelData = await getAllHotels();
+      setHotels(hotelData);
+    } catch (error) {
+      toast.error("Failed to fetch hotels.");
+    }
+  };
 
   const fetchRoom = async () => {
     try {
@@ -79,6 +90,7 @@ const EditRoom = () => {
         roomPrice: roomData.roomPrice,
         description: roomData.description,
         roomCategory: roomData.roomCategory,
+        hotel: roomData.hotel?.id,
       });
 
       // Set image preview if photo exists
@@ -86,7 +98,7 @@ const EditRoom = () => {
         setImagePreview(`data:image/jpeg;base64,${roomData.photo}`);
       }
     } catch (error) {
-      message.error("Failed to fetch room data");
+      toast.error("Failed to fetch room data");
       console.error(error);
     } finally {
       setLoading(false);
@@ -111,14 +123,14 @@ const EditRoom = () => {
       });
 
       if (response.status === 200) {
-        message.success("Room updated successfully!");
+        toast.success("Room updated successfully!");
         // Refresh room data
         await fetchRoom();
       } else {
-        message.error("Error updating room");
+        toast.error("Error updating room");
       }
     } catch (error) {
-      message.error(error.message || "Failed to update room");
+      toast.error(error.message || "Failed to update room");
       console.error(error);
     } finally {
       setSaving(false);
@@ -237,6 +249,20 @@ const EditRoom = () => {
                 ]}
               >
                 <TextArea rows={4} placeholder="Enter room description" />
+              </Form.Item>
+
+              <Form.Item
+                label="Hotel"
+                name="hotel"
+                rules={[{ required: true, message: "Please select hotel" }]}
+              >
+                <Select placeholder="Select hotel">
+                  {hotels.map((hotel) => (
+                    <Option key={hotel.id} value={hotel.id}>
+                      {hotel.name}
+                    </Option>
+                  ))}
+                </Select>
               </Form.Item>
 
               <Form.Item label="Room Photo">

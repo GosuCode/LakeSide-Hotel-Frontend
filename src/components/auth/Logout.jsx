@@ -1,15 +1,16 @@
-import { useContext } from "react";
-import { AuthContext } from "./AuthProvider";
+import { useAuth } from "./AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
+import toast from "react-hot-toast";
 
 const Logout = () => {
-  const auth = useContext(AuthContext);
+  const auth = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     auth.handleLogout();
-    navigate("/", { state: { message: " You have been logged out!" } });
+    toast.success("Logged out successfully! See you soon!");
+    navigate("/");
   };
 
   return (

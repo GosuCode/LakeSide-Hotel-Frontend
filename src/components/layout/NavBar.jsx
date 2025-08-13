@@ -8,6 +8,7 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import Logout from "../auth/Logout";
+import logo from "../../assets/LakeSide.png";
 
 const { Header } = Layout;
 
@@ -79,7 +80,7 @@ const NavBar = () => {
         }}
       >
         <Link to="/" className="logo">
-          lakeSide Hotel
+          <img src={logo} alt="lakeside" style={{ width: "60px" }} />
         </Link>
         <div style={{ display: "flex", alignItems: "center" }}>
           <NavLink

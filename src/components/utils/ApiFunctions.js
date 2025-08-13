@@ -28,7 +28,8 @@ export async function addRoom(
   roomNumber,
   description,
   roomCategory,
-  amenities
+  amenities,
+  hotelId
 ) {
   const roomData = {
     photoUrl: photoUrl,
@@ -40,6 +41,7 @@ export async function addRoom(
     roomCategory: roomCategory,
     amenities: amenities,
     isBooked: false,
+    hotel: { id: hotelId },
   };
 
   const response = await api.post("/rooms/add/new-room-json", roomData, {
@@ -91,12 +93,89 @@ export async function updateRoom(roomId, roomData) {
     roomCategory: roomData.roomCategory,
     amenities: roomData.amenities,
     isBooked: roomData.isBooked,
+    hotel: roomData.hotel,
   };
 
   const response = await api.put(`/rooms/update/${roomId}`, updateData, {
     headers: getJsonHeader(),
   });
   return response;
+}
+
+/* Hotel API Functions */
+
+/* This function adds a new hotel to the database */
+export async function addHotel(hotelData) {
+  try {
+    const response = await api.post("/api/v1/hotels/add", hotelData, {
+      headers: getJsonHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Error adding hotel");
+  }
+}
+
+/* This function gets all hotels from the database */
+export async function getAllHotels() {
+  try {
+    const response = await api.get("/api/v1/hotels/all");
+    return response.data;
+  } catch (error) {
+    throw new Error("Error fetching hotels");
+  }
+}
+
+/* This function gets a hotel by ID */
+export async function getHotelById(hotelId) {
+  try {
+    const response = await api.get(`/api/v1/hotels/${hotelId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Error fetching hotel");
+  }
+}
+
+/* This function updates a hotel */
+export async function updateHotel(hotelId, hotelData) {
+  try {
+    const response = await api.put(
+      `/api/v1/hotels/update/${hotelId}`,
+      hotelData,
+      {
+        headers: getJsonHeader(),
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Error updating hotel");
+  }
+}
+
+/* This function deletes a hotel */
+export async function deleteHotel(hotelId) {
+  try {
+    const response = await api.delete(`/api/v1/hotels/delete/${hotelId}`, {
+      headers: getHeader(),
+    });
+    return response.status === 204;
+  } catch (error) {
+    throw new Error("Error deleting hotel");
+  }
+}
+
+/* This function searches hotels */
+export async function searchHotels(name, address) {
+  try {
+    const params = new URLSearchParams();
+    if (name) params.append("name", name);
+    if (address) params.append("address", address);
+
+    const response = await api.get(`/api/v1/hotels/search?${params}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Error searching hotels");
+  }
 }
 
 /* This funcction gets a room by the id */

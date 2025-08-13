@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { addRoom } from "../utils/ApiFunctions";
+import { useState, useEffect } from "react";
+import { addRoom, getAllHotels } from "../utils/ApiFunctions";
 import { uploadImageToCloudinary } from "../utils/cloudinaryUpload";
 import { Link } from "react-router-dom";
 import {
@@ -8,12 +8,12 @@ import {
   Button,
   Upload,
   Typography,
-  message,
   Image,
   Space,
   Select,
   Checkbox,
   Spin,
+  message,
 } from "antd";
 import { UploadOutlined, LoadingOutlined } from "@ant-design/icons";
 
@@ -76,64 +76,59 @@ const AddRoom = () => {
   const [photo, setPhoto] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
+  const [hotels, setHotels] = useState([]);
+
+  useEffect(() => {
+    const fetchHotels = async () => {
+      try {
+        const hotelData = await getAllHotels();
+        setHotels(hotelData);
+      } catch (error) {
+        message.error("Failed to fetch hotels.");
+      }
+    };
+    fetchHotels();
+  }, []);
 
   const handleImageChange = (info) => {
-    console.log("Image change info:", info);
-
-    const file = info.file; // Changed from info.file.originFileObj
+    const file = info.file;
     if (file) {
-      console.log("Selected file:", file);
-      console.log("File type:", file.type);
-      console.log("File size:", file.size);
-
-      // Validate file type
       if (!file.type.startsWith("image/")) {
         message.error("Please select an image file (JPEG, PNG, GIF, etc.)");
         return;
       }
 
-      // Validate file size (max 10MB)
-      const maxSize = 10 * 1024 * 1024; // 10MB
+      const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
-        message.error("File size too large. Maximum size is 10MB");
+        message.error("File size too large. Maximum size is 5MB");
         return;
       }
 
       setPhoto(file);
       setImagePreview(URL.createObjectURL(file));
-      message.success("Image selected successfully!");
-      console.log(
-        "Image state updated - photo:",
-        file,
-        "preview:",
-        URL.createObjectURL(file)
-      );
     } else {
-      console.log("No file found in info.file");
+      message.error("No file found in info.file");
     }
   };
 
   const beforeUpload = (file) => {
-    // Check file type
     const isImage = file.type.startsWith("image/");
     if (!isImage) {
       message.error("You can only upload image files!");
       return false;
     }
 
-    // Check file size
-    const isLt10M = file.size / 1024 / 1024 < 10;
-    if (!isLt10M) {
-      message.error("Image must be smaller than 10MB!");
+    const isLt5M = file.size / 1024 / 1024 < 5;
+    if (!isLt5M) {
+      message.error("Image must be smaller than 5MB!");
       return false;
     }
 
-    return false; // Return false to prevent auto upload
+    return false;
   };
 
   const handleSubmit = async (values) => {
     try {
-      // Don't allow submission if image is still uploading
       if (imageUploading) {
         message.warning("Please wait for image upload to complete");
         return;
@@ -149,20 +144,20 @@ const AddRoom = () => {
         description,
         roomCategory,
         amenities,
+        hotel,
       } = values;
 
       let photoUrl = null;
 
-      // Upload image to Cloudinary if photo is selected
       if (photo) {
         try {
           setImageUploading(true);
-          message.info("Uploading image to Cloudinary...");
 
           photoUrl = await uploadImageToCloudinary(photo);
-          message.success("Image uploaded successfully!");
         } catch (uploadError) {
-          message.error("Failed to upload image. Please try again.");
+          message.error(
+            uploadError.message || "Failed to upload image. Please try again."
+          );
           setUploading(false);
           setImageUploading(false);
           return;
@@ -171,8 +166,6 @@ const AddRoom = () => {
         }
       }
 
-      // Now submit the room data
-      message.info("Saving room data...");
       const success = await addRoom(
         photoUrl,
         roomType,
@@ -181,7 +174,8 @@ const AddRoom = () => {
         roomNumber,
         description,
         roomCategory,
-        amenities
+        amenities,
+        hotel
       );
 
       if (success !== undefined) {
@@ -199,7 +193,6 @@ const AddRoom = () => {
     }
   };
 
-  // Check if form can be submitted
   const canSubmit = !imageUploading && !uploading;
 
   return (
@@ -288,6 +281,16 @@ const AddRoom = () => {
           </Checkbox.Group>
         </Form.Item>
 
+        <Form.Item label="Hotel" name="hotel" rules={[{ required: true }]}>
+          <Select placeholder="Select hotel">
+            {hotels.map((hotel) => (
+              <Option key={hotel.id} value={hotel.id}>
+                {hotel.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
         <Form.Item label="Room Photo">
           <div style={{ marginBottom: 16 }}>
             <Upload
@@ -306,22 +309,6 @@ const AddRoom = () => {
                 {imageUploading ? "Uploading..." : "Select Image"}
               </Button>
             </Upload>
-
-            {/* Fallback file input for debugging */}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file) {
-                  console.log("Direct file input:", file);
-                  setPhoto(file);
-                  setImagePreview(URL.createObjectURL(file));
-                  message.success("Image selected via fallback input!");
-                }
-              }}
-              style={{ marginLeft: 16 }}
-            />
           </div>
 
           {imageUploading && (

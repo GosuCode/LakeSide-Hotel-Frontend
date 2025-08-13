@@ -1,7 +1,8 @@
-import { Row, Col, Card, Typography, Button, Spin, message } from "antd";
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { getAllRooms } from "../../components/utils/ApiFunctions";
+import { Button, Typography, Card, Row, Col, Spin } from "antd";
+import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -22,7 +23,7 @@ const RoomPage = () => {
       setError(null);
     } catch (err) {
       setError(err.message);
-      message.error("Failed to fetch rooms");
+      toast.error("Failed to fetch rooms");
     } finally {
       setLoading(false);
     }

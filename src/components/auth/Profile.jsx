@@ -27,7 +27,7 @@ const Profile = () => {
   ]);
   const [message, setMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
@@ -59,25 +59,25 @@ const Profile = () => {
     fetchBookings();
   }, [userId]);
 
-  const handleDeleteAccount = async () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete your account? This action cannot be undone."
-    );
-    if (confirmed) {
-      await deleteUser(userId)
-        .then((response) => {
-          setMessage(response.data);
-          localStorage.removeItem("token");
-          localStorage.removeItem("userId");
-          localStorage.removeItem("userRole");
-          navigate("/");
-          window.location.reload();
-        })
-        .catch((error) => {
-          setErrorMessage(error.data);
-        });
-    }
-  };
+  // const handleDeleteAccount = async () => {
+  //   const confirmed = window.confirm(
+  //     "Are you sure you want to delete your account? This action cannot be undone."
+  //   );
+  //   if (confirmed) {
+  //     await deleteUser(userId)
+  //       .then((response) => {
+  //         setMessage(response.data);
+  //         localStorage.removeItem("token");
+  //         localStorage.removeItem("userId");
+  //         localStorage.removeItem("userRole");
+  //         navigate("/");
+  //         window.location.reload();
+  //       })
+  //       .catch((error) => {
+  //         setErrorMessage(error.data);
+  //       });
+  //   }
+  // };
 
   return (
     <div className="container">
@@ -210,7 +210,7 @@ const Profile = () => {
                 <p>You have not made any bookings yet.</p>
               )}
 
-              <div className="d-flex justify-content-center">
+              {/* <div className="d-flex justify-content-center">
                 <div className="mx-2">
                   <button
                     className="btn btn-danger btn-sm"
@@ -219,7 +219,7 @@ const Profile = () => {
                     Close account
                   </button>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

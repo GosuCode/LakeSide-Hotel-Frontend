@@ -2,13 +2,22 @@ import { useState } from "react";
 import { loginUser } from "../utils/ApiFunctions";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
+import toast from "react-hot-toast";
+import { Form, Input, Button, Typography, Card, Spin, Space } from "antd";
+import { MailOutlined, LockOutlined } from "@ant-design/icons";
+
+const { Title, Text } = Typography;
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const [login, setLogin] = useState({
     email: "",
     password: "",
   });
+
+  const GMAIL_REGEX =
+    /^[A-Za-z](?:[A-Za-z0-9]*(?:\.[A-Za-z0-9]+)*)?(?:\+[A-Za-z0-9_-]+)?@(gmail)\.com$/;
 
   const navigate = useNavigate();
   const auth = useAuth();
@@ -19,72 +28,100 @@ const Login = () => {
     setLogin({ ...login, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const success = await loginUser(login);
-    if (success) {
-      const token = success.token;
-      auth.handleLogin(token);
-      navigate(redirectUrl, { replace: true });
-    } else {
-      setErrorMessage("Invalid username or password. Please try again.");
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const success = await loginUser(login);
+      if (success) {
+        const token = success.token;
+        auth.handleLogin(token);
+        toast.success("Login successful! Welcome back!");
+        navigate(redirectUrl, { replace: true });
+      } else {
+        setErrorMessage("Invalid username or password. Please try again.");
+        toast.error("Login failed. Please check your credentials.");
+      }
+    } catch (error) {
+      setErrorMessage("An error occurred during login. Please try again.");
+      toast.error("Login failed. Please try again later.");
+    } finally {
+      setLoading(false);
+      setTimeout(() => setErrorMessage(""), 4000);
     }
-    setTimeout(() => {
-      setErrorMessage("");
-    }, 4000);
   };
 
   return (
-    <section className="container col-6 mt-5 mb-5">
-      {errorMessage && <p className="alert alert-danger">{errorMessage}</p>}
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="row mb-3">
-          <label htmlFor="email" className="col-sm-2 col-form-label">
-            Email
-          </label>
-          <div>
-            <input
-              id="email"
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        padding: "50px",
+        height: "100vh",
+      }}
+    >
+      <Card style={{ width: 400 }} bordered={true}>
+        <Title level={2} style={{ textAlign: "center" }}>
+          Login
+        </Title>
+
+        {errorMessage && (
+          <Text type="danger" style={{ display: "block", marginBottom: 16 }}>
+            {errorMessage}
+          </Text>
+        )}
+
+        <Form layout="vertical" onFinish={handleSubmit}>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              { required: true, message: "Please enter your email!" },
+              {
+                pattern: GMAIL_REGEX,
+                message:
+                  "Use a valid Gmail address, e.g. john.doe+notes@gmail.com",
+              },
+            ]}
+          >
+            <Input
+              prefix={<MailOutlined />}
               name="email"
-              type="email"
-              className="form-control"
               value={login.email}
               onChange={handleInputChange}
+              disabled={loading}
+              allowClear
+              autoComplete="email"
+              inputMode="email"
             />
-          </div>
-        </div>
+          </Form.Item>
 
-        <div className="row mb-3">
-          <label htmlFor="password" className="col-sm-2 col-form-label">
-            Password
-          </label>
-          <div>
-            <input
-              id="password"
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: "Please enter your password!" }]}
+          >
+            <Input.Password
+              prefix={<LockOutlined />}
               name="password"
-              type="password"
-              className="form-control"
               value={login.password}
               onChange={handleInputChange}
+              disabled={loading}
             />
-          </div>
-        </div>
+          </Form.Item>
 
-        <div className="mb-3">
-          <button
-            type="submit"
-            className="btn btn-hotel"
-            style={{ marginRight: "10px" }}
-          >
-            Login
-          </button>
-          <span style={{ marginLeft: "10px" }}>
-            Don't' have an account yet?<Link to={"/register"}> Register</Link>
-          </span>
-        </div>
-      </form>
-    </section>
+          <Form.Item>
+            <Space>
+              <Button type="primary" htmlType="submit" disabled={loading}>
+                {loading ? <Spin size="small" /> : "Login"}
+              </Button>
+              <Text>
+                Don&apos;t have an account? <Link to="/register">Register</Link>
+              </Text>
+            </Space>
+          </Form.Item>
+        </Form>
+      </Card>
+    </div>
   );
 };
 

@@ -4,6 +4,7 @@ import {
   BookOutlined,
   UserOutlined,
   SettingOutlined,
+  HomeOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
@@ -30,6 +31,9 @@ export default function Sidebar() {
       <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]}>
         <Menu.Item key="1" icon={<DashboardOutlined />}>
           <Link to="/admin">Dashboard</Link>
+        </Menu.Item>
+        <Menu.Item key="/admin/hotels" icon={<HomeOutlined />}>
+          <Link to="/admin/hotels">Hotels</Link>
         </Menu.Item>
         <Menu.Item key="/admin/rooms" icon={<SettingOutlined />}>
           <Link to="/admin/rooms">Rooms</Link>

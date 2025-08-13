@@ -8,8 +8,8 @@ import {
   Button,
   Typography,
   Card,
-  message,
 } from "antd";
+import toast from "react-hot-toast";
 import BookingSummary from "./BookingSummary";
 import { bookRoom, getRoomById, getRoomPricing } from "../utils/ApiFunctions";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -44,6 +44,7 @@ const BookingForm = () => {
       setDynamicPricing(pricing);
     } catch {
       setDynamicPricing(null);
+      toast.error("Unable to fetch pricing. Using base price.");
     }
   };
 
@@ -52,7 +53,7 @@ const BookingForm = () => {
       const response = await getRoomById(id);
       setRoomPrice(response.roomPrice);
     } catch (err) {
-      message.error("Failed to fetch room price");
+      toast.error("Failed to fetch room price");
     }
   };
 
@@ -93,6 +94,7 @@ const BookingForm = () => {
 
     if (moment(checkOut).isSameOrBefore(moment(checkIn))) {
       setErrorMessage("Check-out date must be after check-in date");
+      toast.error("Check-out date must be after check-in date");
       return;
     }
     setErrorMessage("");
@@ -112,8 +114,12 @@ const BookingForm = () => {
   const handleConfirm = async () => {
     try {
       const confirmationCode = await bookRoom(roomId, booking);
+      toast.success(
+        "Booking confirmed successfully! Check your email for details."
+      );
       navigate("/booking-success", { state: { message: confirmationCode } });
     } catch (err) {
+      toast.error("Booking failed. Please try again.");
       navigate("/booking-success", { state: { error: err.message } });
     }
   };
@@ -159,7 +165,7 @@ const BookingForm = () => {
                 },
               ]}
             >
-              <Input disabled />
+              <Input />
             </Form.Item>
 
             <Form.Item label="Lodging Period" required>
@@ -176,7 +182,10 @@ const BookingForm = () => {
               )}
             </Form.Item>
 
-            <Form.Item label="Number of Guests" style={{ marginBottom: 0 }}>
+            <Form.Item
+              label="Number of adults and children"
+              style={{ marginBottom: 0 }}
+            >
               <div style={{ display: "flex", gap: "1rem" }}>
                 <Form.Item
                   name="numOfAdults"

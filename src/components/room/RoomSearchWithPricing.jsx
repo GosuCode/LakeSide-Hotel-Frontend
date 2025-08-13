@@ -8,7 +8,6 @@ import {
   Space,
   Row,
   Col,
-  message,
 } from "antd";
 import {
   SearchOutlined,
@@ -17,6 +16,7 @@ import {
 } from "@ant-design/icons";
 import { getRoomsWithPricing } from "../utils/ApiFunctions";
 import PricingDisplay from "../common/PricingDisplay";
+import toast from "react-hot-toast";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -46,7 +46,7 @@ const RoomSearchWithPricing = () => {
 
   const handleSearch = async () => {
     if (!searchParams.checkIn || !searchParams.checkOut) {
-      message.warning("Please select both check-in and check-out dates");
+      toast.warning("Please select both check-in and check-out dates");
       return;
     }
 
@@ -65,15 +65,13 @@ const RoomSearchWithPricing = () => {
       setHasSearched(true);
 
       if (roomsData.length === 0) {
-        message.info("No rooms available for the selected dates and criteria");
+        toast.info("No rooms available for the selected dates and criteria");
       } else {
-        message.success(
-          `Found ${roomsData.length} room(s) with dynamic pricing`
-        );
+        toast.success(`Found ${roomsData.length} room(s) with dynamic pricing`);
       }
     } catch (error) {
       console.error("Search error:", error);
-      message.error("Error searching for rooms. Please try again.");
+      toast.error("Error searching for rooms. Please try again.");
     } finally {
       setLoading(false);
     }

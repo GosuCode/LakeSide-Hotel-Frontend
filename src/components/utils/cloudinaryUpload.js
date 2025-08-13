@@ -7,6 +7,11 @@ export const uploadImageToCloudinary = async (file) => {
       import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "your_upload_preset";
 
     console.log("Cloudinary Config:", { cloudName, uploadPreset });
+    console.log("File being uploaded:", {
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    });
 
     // Check if configuration is set
     if (
@@ -51,21 +56,26 @@ export const uploadImageToCloudinary = async (file) => {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.error("Cloudinary upload failed:", errorData);
 
       if (response.status === 400) {
         throw new Error(
-          "Invalid upload preset or cloud name. Please check your configuration."
+          `Invalid upload preset or cloud name. Error: ${
+            errorData.error?.message || "Unknown error"
+          }`
         );
       } else if (response.status === 401) {
         throw new Error(
-          "Upload preset is not configured correctly. Please check your Cloudinary settings."
+          `Upload preset is not configured correctly. Error: ${
+            errorData.error?.message || "Unknown error"
+          }`
         );
       } else if (response.status === 413) {
         throw new Error("File size too large for Cloudinary.");
       } else {
         throw new Error(
-          `Upload failed with status ${response.status}. Please try again.`
+          `Upload failed with status ${response.status}. Error: ${
+            errorData.error?.message || "Unknown error"
+          }`
         );
       }
     }

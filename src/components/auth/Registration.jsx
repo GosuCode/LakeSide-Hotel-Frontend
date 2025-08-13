@@ -1,6 +1,25 @@
 import { useState } from "react";
 import { registerUser } from "../utils/ApiFunctions";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import {
+  Form,
+  Input,
+  Button,
+  Typography,
+  Card,
+  Spin,
+  Space,
+  Alert,
+} from "antd";
+import {
+  UserOutlined,
+  MailOutlined,
+  LockOutlined,
+  SolutionOutlined,
+} from "@ant-design/icons";
+
+const { Title, Text } = Typography;
 
 const Registration = () => {
   const [registration, setRegistration] = useState({
@@ -12,114 +31,144 @@ const Registration = () => {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const GMAIL_REGEX =
+    /^[A-Za-z](?:[A-Za-z0-9]*(?:\.[A-Za-z0-9]+)*)?(?:\+[A-Za-z0-9_-]+)?@(gmail)\.com$/;
 
   const handleInputChange = (e) => {
     setRegistration({ ...registration, [e.target.name]: e.target.value });
   };
 
-  const handleRegistration = async (e) => {
-    e.preventDefault();
+  const handleRegistration = async () => {
+    setLoading(true);
     try {
       const result = await registerUser(registration);
       setSuccessMessage(result);
       setErrorMessage("");
       setRegistration({ firstName: "", lastName: "", email: "", password: "" });
+      toast.success("Registration successful! You can now login.");
     } catch (error) {
       setSuccessMessage("");
-      setErrorMessage(`Registration error : ${error.message}`);
+      setErrorMessage(`Registration error: ${error.message}`);
+      toast.error(`Registration failed: ${error.message}`);
+    } finally {
+      setLoading(false);
+      setTimeout(() => {
+        setErrorMessage("");
+        setSuccessMessage("");
+      }, 5000);
     }
-    setTimeout(() => {
-      setErrorMessage("");
-      setSuccessMessage("");
-    }, 5000);
   };
 
   return (
-    <section className="container col-6 mt-5 mb-5">
-      {errorMessage && <p className="alert alert-danger">{errorMessage}</p>}
-      {successMessage && (
-        <p className="alert alert-success">{successMessage}</p>
-      )}
+    <div style={{ display: "flex", justifyContent: "center", padding: "50px" }}>
+      <Card style={{ width: 450 }} bordered={true}>
+        <Title level={2} style={{ textAlign: "center" }}>
+          Register
+        </Title>
 
-      <h2>Register</h2>
-      <form onSubmit={handleRegistration}>
-        <div className="mb-3 row">
-          <label htmlFor="firstName" className="col-sm-2 col-form-label">
-            first Name
-          </label>
-          <div className="col-sm-10">
-            <input
-              id="firstName"
+        {errorMessage && (
+          <Alert
+            message={errorMessage}
+            type="error"
+            showIcon
+            style={{ marginBottom: 16 }}
+          />
+        )}
+        {successMessage && (
+          <Alert
+            message={successMessage}
+            type="success"
+            showIcon
+            style={{ marginBottom: 16 }}
+          />
+        )}
+
+        <Form layout="vertical" onFinish={handleRegistration}>
+          <Form.Item
+            label="First Name"
+            name="firstName"
+            rules={[
+              { required: true, message: "Please enter your first name!" },
+            ]}
+          >
+            <Input
+              prefix={<SolutionOutlined />}
               name="firstName"
-              type="text"
-              className="form-control"
               value={registration.firstName}
               onChange={handleInputChange}
+              disabled={loading}
             />
-          </div>
-        </div>
+          </Form.Item>
 
-        <div className="mb-3 row">
-          <label htmlFor="lastName" className="col-sm-2 col-form-label">
-            Last Name
-          </label>
-          <div className="col-sm-10">
-            <input
-              id="lastName"
+          <Form.Item
+            label="Last Name"
+            name="lastName"
+            rules={[
+              { required: true, message: "Please enter your last name!" },
+            ]}
+          >
+            <Input
+              prefix={<UserOutlined />}
               name="lastName"
-              type="text"
-              className="form-control"
               value={registration.lastName}
               onChange={handleInputChange}
+              disabled={loading}
             />
-          </div>
-        </div>
+          </Form.Item>
 
-        <div className="mb-3 row">
-          <label htmlFor="email" className="col-sm-2 col-form-label">
-            Email
-          </label>
-          <div className="col-sm-10">
-            <input
-              id="email"
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              { required: true, message: "Please enter your email!" },
+              {
+                pattern: GMAIL_REGEX,
+                message:
+                  "Use a valid Gmail address, e.g. john.doe+notes@gmail.com",
+              },
+            ]}
+          >
+            <Input
+              prefix={<MailOutlined />}
               name="email"
-              type="email"
-              className="form-control"
               value={registration.email}
               onChange={handleInputChange}
+              disabled={loading}
+              allowClear
+              autoComplete="email"
+              inputMode="email"
             />
-          </div>
-        </div>
+          </Form.Item>
 
-        <div className="mb-3 row">
-          <label htmlFor="password" className="col-sm-2 col-form-label">
-            Password
-          </label>
-          <div className="col-sm-10">
-            <input
-              type="password"
-              className="form-control"
-              id="password"
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: "Please enter your password!" }]}
+          >
+            <Input.Password
+              prefix={<LockOutlined />}
               name="password"
               value={registration.password}
               onChange={handleInputChange}
+              disabled={loading}
             />
-          </div>
-        </div>
-        <div className="mb-3">
-          <button
-            type="submit"
-            className="btn btn-hotel"
-            style={{ marginRight: "10px" }}
-          >
-            Register
-          </button>
-          <span style={{ marginLeft: "10px" }}>
-            Already have an account? <Link to={"/login"}>Login</Link>
-          </span>
-        </div>
-      </form>
-    </section>
+          </Form.Item>
+
+          <Form.Item>
+            <Space>
+              <Button type="primary" htmlType="submit" disabled={loading}>
+                {loading ? <Spin size="small" /> : "Register"}
+              </Button>
+              <Text>
+                Already have an account? <Link to="/login">Login</Link>
+              </Text>
+            </Space>
+          </Form.Item>
+        </Form>
+      </Card>
+    </div>
   );
 };
 
