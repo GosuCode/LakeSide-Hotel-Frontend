@@ -108,7 +108,6 @@ const Checkout = () => {
             src={photo}
             alt={`${roomCategory} - ${roomType}`}
             style={{ borderRadius: 8 }}
-            preview={false}
             width="100%"
             height={250}
             placeholder

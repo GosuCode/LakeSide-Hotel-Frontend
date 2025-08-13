@@ -1,6 +1,5 @@
 body {
   min-height: 100vh;
-  padding-bottom: 50px;
 }
 
 :root {
@@ -210,7 +209,7 @@ a{
 
 /* The header banner */
 .header-banner {
-  background-image:  url("./assets/images/services-1.jpg");
+  background-image:  url("./assets/images/lakeside_hotel.jpg");
    background-size: cover;
   background-position: center;
    position: relative;
@@ -239,7 +238,7 @@ a{
 .main-hero-section {
   position: relative;
   height: 85vh;
-  background-image: url("./assets/images/services-1.jpg");
+  background-image: url("./assets/images/lakeside_hotel.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

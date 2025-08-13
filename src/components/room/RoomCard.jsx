@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
-import { Card, Row, Col, Button, Typography, Tag } from "antd";
-import { CheckOutlined } from "@ant-design/icons";
+import { Card, Row, Col, Button, Typography, Tag, Space } from "antd";
+import { CheckOutlined, EyeOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
@@ -45,9 +46,14 @@ const RoomCard = ({ room }) => {
           <Text type="secondary" style={{ textTransform: "capitalize" }}>
             {room.roomCategory} - {room.roomType}
           </Text>
-          <Title level={4} style={{ margin: "4px 0" }}>
-            Room No: {room.roomNumber}
-          </Title>
+          <Link to={`/room/${room.id}`}>
+            <Title
+              level={4}
+              style={{ margin: "4px 0", cursor: "pointer", color: "#1890ff" }}
+            >
+              Room No: {room.roomNumber}
+            </Title>
+          </Link>
           <Text>{room.description}</Text>
           <div style={{ marginTop: 8 }}>
             <Tag color="blue">{room.bedType}</Tag>
@@ -84,13 +90,27 @@ const RoomCard = ({ room }) => {
           <Title level={4} style={{ margin: "0 0 8px" }}>
             Rs. {room.roomPrice}
           </Title>
-          <Button
-            type="primary"
-            disabled={room.booked}
-            style={{ background: "#d4a017", border: "none", color: "#fff" }}
-          >
-            {room.booked ? "Not Available" : "Book Now"}
-          </Button>
+          <Space direction="vertical" style={{ width: "100%" }}>
+            <Link to={`/room/${room.id}`}>
+              <Button icon={<EyeOutlined />} style={{ width: "100%" }}>
+                View Details
+              </Button>
+            </Link>
+            <Link to={`/book-room/${room.id}`}>
+              <Button
+                type="primary"
+                disabled={room.booked}
+                style={{
+                  background: "#d4a017",
+                  border: "none",
+                  color: "#fff",
+                  width: "100%",
+                }}
+              >
+                {room.booked ? "Not Available" : "Book Now"}
+              </Button>
+            </Link>
+          </Space>
         </Col>
       </Row>
     </Card>

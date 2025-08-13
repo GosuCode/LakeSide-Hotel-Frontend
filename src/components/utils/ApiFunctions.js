@@ -267,7 +267,6 @@ export async function registerUser(registration) {
     }
   }
 }
-
 export async function loginUser(login) {
   try {
     const response = await api.post("/auth/login", login, {

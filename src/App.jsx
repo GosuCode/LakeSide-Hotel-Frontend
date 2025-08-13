@@ -4,6 +4,8 @@ import { Toaster } from "react-hot-toast";
 import Home from "./components/home/Home";
 import NavBar from "./components/layout/NavBar";
 import RoomListing from "./components/room/RoomListing";
+import RoomDetails from "./components/room/RoomDetails";
+import HotelDetails from "./components/hotel/HotelDetails";
 import BookingSuccess from "./components/booking/BookingSuccess";
 import Bookings from "./components/booking/Bookings";
 import FindBooking from "./components/booking/FindBooking";
@@ -15,6 +17,7 @@ import RequireAuth from "./components/auth/RequireAuth";
 import AdminDashboard from "./dashboard";
 import AppFooter from "./components/layout/AppFooter";
 import Checkout from "./components/booking/Checkout";
+import MainFooter from "./components/layout/MainFooter";
 
 function App() {
   return (
@@ -32,6 +35,8 @@ function App() {
                 </RequireAuth>
               }
             />
+            <Route path="/room/:roomId" element={<RoomDetails />} />
+            <Route path="/hotel/:id" element={<HotelDetails />} />
             <Route path="/browse-all-rooms" element={<RoomListing />} />
             <Route path="/book-room/:roomId" element={<Checkout />} />
             <Route path="/booking-success" element={<BookingSuccess />} />
@@ -42,6 +47,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/logout" element={<FindBooking />} />
           </Routes>
+          <MainFooter />
           <AppFooter />
         </Router>
         <Toaster

@@ -113,6 +113,19 @@ const RoomCarousel = () => {
                 Rs. {room.roomPrice} / night
               </Text>
               <div style={{ marginTop: 12 }}>
+                <Link to={`/room/${room.id}`}>
+                  <Button
+                    style={{
+                      background: "#1890ff",
+                      border: "none",
+                      color: "#fff",
+                      marginBottom: "8px",
+                    }}
+                    block
+                  >
+                    View Details
+                  </Button>
+                </Link>
                 <Link to={`/book-room/${room.id}`}>
                   <Button
                     style={{
