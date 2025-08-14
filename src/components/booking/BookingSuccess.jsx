@@ -1,24 +1,62 @@
-import { useLocation } from "react-router-dom";
-import Header from "../common/Header";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Result, Button, Typography } from "antd";
+const { Paragraph, Title } = Typography;
 
 const BookingSuccess = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const message = location.state?.message;
   const error = location.state?.error;
+  const bookingDetails = location.state?.bookingDetails;
+
   return (
     <div className="container">
-      <Header title="Booking Success" />
+      <Title level={2}>Booking Status</Title>
       <div className="mt-5">
         {message ? (
-          <div>
-            <h3 className="text-success"> Booking Success!</h3>
-            <p className="text-success">{message}</p>
-          </div>
+          <Result
+            status="success"
+            title="Booking Successful!"
+            subTitle={message}
+            extra={[
+              <Button
+                type="primary"
+                key="myBookings"
+                onClick={() => navigate("/my-bookings")}
+              >
+                View My Bookings
+              </Button>,
+              <Button
+                key="bookAgain"
+                onClick={() => navigate("/browse-all-rooms")}
+              >
+                Book Another Room
+              </Button>,
+            ]}
+          >
+            {bookingDetails && (
+              <Paragraph>
+                <strong>Room:</strong> {bookingDetails.roomType} <br />
+                <strong>Check-in:</strong> {bookingDetails.checkInDate} <br />
+                <strong>Check-out:</strong> {bookingDetails.checkOutDate}
+              </Paragraph>
+            )}
+          </Result>
         ) : (
-          <div>
-            <h3 className="text-danger"> Error Booking Room!</h3>
-            <p className="text-danger">{error}</p>
-          </div>
+          <Result
+            status="error"
+            title="Booking Failed"
+            subTitle={error || "An unexpected error occurred."}
+            extra={[
+              <Button
+                type="primary"
+                key="tryAgain"
+                onClick={() => navigate("/rooms")}
+              >
+                Try Again
+              </Button>,
+            ]}
+          />
         )}
       </div>
     </div>

@@ -6,10 +6,10 @@ import NavBar from "./components/layout/NavBar";
 import RoomListing from "./components/room/RoomListing";
 import RoomDetails from "./components/room/RoomDetails";
 import HotelDetails from "./components/hotel/HotelDetails";
+import HotelRooms from "./components/hotel/HotelRooms";
 import NearbyHotelsSearch from "./components/hotel/NearbyHotelsSearch";
 import BookingSuccess from "./components/booking/BookingSuccess";
 import Bookings from "./components/booking/Bookings";
-import FindBooking from "./components/booking/FindBooking";
 import Login from "./components/auth/Login";
 import Registration from "./components/auth/Registration";
 import Profile from "./components/auth/Profile";
@@ -19,6 +19,7 @@ import AdminDashboard from "./dashboard";
 import AppFooter from "./components/layout/AppFooter";
 import Checkout from "./components/booking/Checkout";
 import MainFooter from "./components/layout/MainFooter";
+import YourBookings from "./components/booking/YourBookings";
 
 function App() {
   return (
@@ -38,16 +39,16 @@ function App() {
             />
             <Route path="/room/:roomId" element={<RoomDetails />} />
             <Route path="/hotel/:id" element={<HotelDetails />} />
+            <Route path="/hotel/:hotelId/rooms" element={<HotelRooms />} />
             <Route path="/nearby-hotels" element={<NearbyHotelsSearch />} />
             <Route path="/browse-all-rooms" element={<RoomListing />} />
             <Route path="/book-room/:roomId" element={<Checkout />} />
             <Route path="/booking-success" element={<BookingSuccess />} />
             <Route path="/existing-bookings" element={<Bookings />} />
-            <Route path="/find-booking" element={<FindBooking />} />
+            <Route path="/my-bookings" element={<YourBookings />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/logout" element={<FindBooking />} />
           </Routes>
           <MainFooter />
           <AppFooter />

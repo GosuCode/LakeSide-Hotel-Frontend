@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import { Card, Button, Typography, Spin, Alert } from "antd";
 import { CarOutlined } from "@ant-design/icons";
+import PropTypes from "prop-types";
 
 const { Title, Text } = Typography;
 
-const RoomCarousel = () => {
+const RoomCarousel = ({ title }) => {
   const [rooms, setRooms] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -77,7 +78,7 @@ const RoomCarousel = () => {
       }}
     >
       <Title level={2} style={{ textAlign: "center", marginBottom: 24 }}>
-        Browse all rooms
+        {title || "Browse all rooms"}
       </Title>
 
       <Slider {...settings}>
@@ -149,3 +150,7 @@ const RoomCarousel = () => {
 };
 
 export default RoomCarousel;
+
+RoomCarousel.propTypes = {
+  title: PropTypes.string,
+};

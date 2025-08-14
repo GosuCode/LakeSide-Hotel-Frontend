@@ -173,6 +173,27 @@
   color: #34495e;
 }
 
+.hotel-actions {
+  margin-top: 15px;
+}
+
+.btn-view-rooms {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-view-rooms:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+}
+
 @media (max-width: 768px) {
   .nearby-hotels-container {
     padding: 15px;

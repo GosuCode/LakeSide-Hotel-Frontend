@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { cancelBooking, getAllBookings } from "../utils/ApiFunctions";
-import Header from "../common/Header";
 import BookingsTable from "./BookingsTable";
+import { Typography, Alert, Spin, Card } from "antd";
+
+const { Title } = Typography;
 
 const Bookings = () => {
   const [bookingInfo, setBookingInfo] = useState([]);
@@ -9,17 +11,19 @@ const Bookings = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setTimeout(() => {
-      getAllBookings()
-        .then((data) => {
-          setBookingInfo(data);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          setError(error.message);
-          setIsLoading(false);
-        });
-    }, 1000);
+    const fetchBookings = async () => {
+      try {
+        const data = await getAllBookings();
+        setBookingInfo(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // Simulated delay for loading effect
+    setTimeout(fetchBookings, 1000);
   }, []);
 
   const handleBookingCancellation = async (bookingId) => {
@@ -27,22 +31,36 @@ const Bookings = () => {
       await cancelBooking(bookingId);
       const data = await getAllBookings();
       setBookingInfo(data);
-    } catch (error) {
-      setError(error.message);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
   return (
-    <section style={{ backgroundColor: "whitesmoke" }}>
-      <Header title={"Existing Bookings"} />
-      {error && <div className="text-danger">{error}</div>}
-      {isLoading ? (
-        <div>Loading existing bookings</div>
-      ) : (
-        <BookingsTable
-          bookingInfo={bookingInfo}
-          handleBookingCancellation={handleBookingCancellation}
+    <section style={{ backgroundColor: "#f5f5f5", padding: "24px" }}>
+      <Title level={2}>Existing Bookings</Title>
+
+      {error && (
+        <Alert
+          message="Error"
+          description={error}
+          type="error"
+          showIcon
+          style={{ marginBottom: "16px" }}
         />
+      )}
+
+      {isLoading ? (
+        <div style={{ textAlign: "center", padding: "50px 0" }}>
+          <Spin size="large" tip="Loading existing bookings..." />
+        </div>
+      ) : (
+        <Card>
+          <BookingsTable
+            bookingInfo={bookingInfo}
+            handleBookingCancellation={handleBookingCancellation}
+          />
+        </Card>
       )}
     </section>
   );

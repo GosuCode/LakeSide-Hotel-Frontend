@@ -50,7 +50,6 @@ const NearbyHotelsSearch = () => {
       }
 
       const responseText = await response.text();
-      console.log("Raw response:", responseText);
 
       if (!responseText.trim()) {
         throw new Error("Empty response from server");
@@ -60,15 +59,12 @@ const NearbyHotelsSearch = () => {
       try {
         data = JSON.parse(responseText);
       } catch (parseError) {
-        console.error("JSON parse error:", parseError);
-        console.error("Response text:", responseText);
         throw new Error("Invalid JSON response from server");
       }
 
       setHotels(data);
       setLoading(false);
     } catch (err) {
-      console.error("Error fetching nearby hotels:", err);
       setError(err.message);
       setHotels([]);
       setLoading(false);
@@ -133,6 +129,16 @@ const NearbyHotelsSearch = () => {
                     <strong>Coordinates:</strong> {hotel.latitude.toFixed(6)},{" "}
                     {hotel.longitude.toFixed(6)}
                   </p>
+                  <div className="hotel-actions">
+                    <button
+                      className="btn-view-rooms"
+                      onClick={() =>
+                        (window.location.href = `/hotel/${hotel.id}/rooms`)
+                      }
+                    >
+                      View Rooms
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

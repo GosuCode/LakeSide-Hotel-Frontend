@@ -80,7 +80,7 @@ const HotelsList = () => {
                     View Details
                   </Button>
                 </Link>,
-                <Link to="/browse-all-rooms" key="rooms">
+                <Link to={`/hotel/${hotel.id}/rooms`} key="rooms">
                   <Button>View Rooms</Button>
                 </Link>,
               ]}

@@ -96,7 +96,7 @@ const NavBar = () => {
             Nearby Hotels
           </NavLink>
           <NavLink
-            to="/find-booking"
+            to="/my-bookings"
             style={{ marginRight: "20px", color: "#000" }}
           >
             My Bookings

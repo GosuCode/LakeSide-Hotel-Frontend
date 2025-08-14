@@ -1,5 +1,4 @@
-import { Container, Row, Col, Card } from "react-bootstrap";
-import Header from "./Header";
+import { Row, Col, Card } from "react-bootstrap";
 import {
   FaClock,
   FaCocktail,
@@ -14,7 +13,7 @@ const HotelService = () => {
   return (
     <>
       <div className="mb-2">
-        <Header title={"Our Services"} />
+        <div>Our Services</div>
 
         <Row className="mt-4">
           <h4 className="text-center">
