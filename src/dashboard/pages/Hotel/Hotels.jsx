@@ -9,7 +9,6 @@ import {
   Spin,
   Popconfirm,
   message,
-  Tag,
   Input,
   Row,
   Col,
@@ -24,15 +23,12 @@ import {
   EnvironmentOutlined,
   PhoneOutlined,
   MailOutlined,
-  GlobalOutlined,
-  FileTextOutlined,
-  PictureOutlined,
 } from "@ant-design/icons";
 import {
   getAllHotels,
   deleteHotel,
   searchHotels,
-} from "../../components/utils/ApiFunctions";
+} from "../../../components/utils/ApiFunctions";
 import toast from "react-hot-toast";
 
 const { Title, Text } = Typography;
@@ -40,8 +36,10 @@ const { Search } = Input;
 
 const Hotels = () => {
   const [hotels, setHotels] = useState([]);
+  const [allHotels, setAllHotels] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,6 +51,8 @@ const Hotels = () => {
     try {
       const data = await getAllHotels();
       setHotels(data);
+      setAllHotels(data);
+      setSearchQuery("");
     } catch (error) {
       toast.error("Failed to fetch hotels");
       message.error("Failed to fetch hotels");
@@ -67,10 +67,25 @@ const Hotels = () => {
       return;
     }
 
+    setSearchQuery(value);
     setSearchLoading(true);
     try {
-      const data = await searchHotels(value, value);
-      setHotels(data);
+      const data = await searchHotels(value, "");
+      let addressData = null;
+
+      if (data && data.length > 0) {
+        setHotels(data);
+      } else {
+        addressData = await searchHotels("", value);
+        setHotels(addressData || []);
+      }
+
+      if (
+        (!data || data.length === 0) &&
+        (!addressData || addressData.length === 0)
+      ) {
+        message.info(`No hotels found matching "${value}"`);
+      }
     } catch (error) {
       toast.error("Search failed");
       message.error("Search failed");
@@ -84,7 +99,7 @@ const Hotels = () => {
       await deleteHotel(hotelId);
       toast.success("Hotel deleted successfully!");
       message.success("Hotel deleted successfully!");
-      fetchHotels(); // Refresh the list
+      fetchHotels();
     } catch (error) {
       toast.error("Failed to delete hotel");
       message.error("Failed to delete hotel");
@@ -102,6 +117,7 @@ const Hotels = () => {
           <Text strong>{text}</Text>
         </Space>
       ),
+      width: "20%",
     },
     {
       title: "Address",
@@ -113,7 +129,7 @@ const Hotels = () => {
           <Text>{text}</Text>
         </Space>
       ),
-      ellipsis: true,
+      width: "20%",
     },
     {
       title: "Contact",
@@ -125,6 +141,7 @@ const Hotels = () => {
           <Text>{text}</Text>
         </Space>
       ),
+      width: "15%",
     },
     {
       title: "Email",
@@ -136,54 +153,7 @@ const Hotels = () => {
           <Text>{email || "N/A"}</Text>
         </Space>
       ),
-    },
-    {
-      title: "Website",
-      dataIndex: "website",
-      key: "website",
-      render: (website) => (
-        <Space>
-          <GlobalOutlined style={{ color: "#13c2c2" }} />
-          <Text>
-            <a href={website} target="_blank" rel="noopener noreferrer">
-              {website || "N/A"}
-            </a>
-          </Text>
-        </Space>
-      ),
-    },
-    {
-      title: "Rooms",
-      dataIndex: "roomsCount",
-      key: "roomsCount",
-      render: (roomsCount) => <Tag color="blue">{roomsCount || 0} rooms</Tag>,
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-      render: (description) => (
-        <Space>
-          <FileTextOutlined style={{ color: "#eb2f96" }} />
-          <Text>{description || "No description available."}</Text>
-        </Space>
-      ),
-      ellipsis: true,
-    },
-    {
-      title: "Image",
-      dataIndex: "imageUrl",
-      key: "imageUrl",
-      render: (imageUrl) => (
-        <Space>
-          <PictureOutlined style={{ color: "#52c41a" }} />
-          <Text>
-            <a href={imageUrl} target="_blank" rel="noopener noreferrer">
-              {imageUrl ? "View Image" : "No Image"}
-            </a>
-          </Text>
-        </Space>
-      ),
+      width: "25%",
     },
     {
       title: "Actions",
@@ -266,11 +236,16 @@ const Hotels = () => {
         <Row gutter={[16, 16]} style={{ marginBottom: "24px" }}>
           <Col xs={24} sm={8}>
             <Statistic
-              title="Total Hotels"
-              value={stats.totalHotels}
+              title={searchQuery ? "Search Results" : "Total Hotels"}
+              value={hotels.length}
               prefix={<HomeOutlined />}
               valueStyle={{ color: "#1890ff" }}
             />
+            {searchQuery && (
+              <Text type="secondary" style={{ fontSize: "12px" }}>
+                Showing {hotels.length} of {allHotels.length} hotels
+              </Text>
+            )}
           </Col>
           <Col xs={24} sm={8}>
             <Statistic
@@ -290,15 +265,39 @@ const Hotels = () => {
           </Col>
         </Row>
 
-        <Search
-          placeholder="Search hotels by name or address..."
-          allowClear
-          enterButton={<SearchOutlined />}
-          size="large"
-          onSearch={handleSearch}
-          loading={searchLoading}
-          style={{ marginBottom: "16px" }}
-        />
+        <div style={{ display: "flex", gap: "12px", marginBottom: "16px" }}>
+          <Search
+            placeholder="Search hotels by name or address..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            size="large"
+            onSearch={handleSearch}
+            loading={searchLoading}
+            style={{ flex: 1 }}
+          />
+          {searchQuery && (
+            <Button onClick={fetchHotels} size="large" icon={<HomeOutlined />}>
+              Show All
+            </Button>
+          )}
+        </div>
+
+        {searchQuery && (
+          <div
+            style={{
+              marginBottom: "16px",
+              padding: "12px",
+              background: "#f6ffed",
+              border: "1px solid #b7eb8f",
+              borderRadius: "6px",
+            }}
+          >
+            <Text>
+              Search results for &ldquo;<Text strong>{searchQuery}</Text>&rdquo;
+              - Found {hotels.length} hotel{hotels.length !== 1 ? "s" : ""}
+            </Text>
+          </div>
+        )}
 
         <Table
           columns={columns}
@@ -312,6 +311,21 @@ const Hotels = () => {
               `${range[0]}-${range[1]} of ${total} hotels`,
           }}
           scroll={{ x: 800 }}
+          locale={{
+            emptyText: searchQuery ? (
+              <div style={{ padding: "24px", textAlign: "center" }}>
+                <Text type="secondary">
+                  No hotels found matching your search criteria
+                </Text>
+                <br />
+                <Button type="link" onClick={fetchHotels}>
+                  Show all hotels
+                </Button>
+              </div>
+            ) : (
+              "No hotels available"
+            ),
+          }}
         />
       </Card>
     </div>

@@ -3,12 +3,12 @@ import { Routes, Route } from "react-router-dom";
 import Sidebar from "./components/sidebar";
 import Navbar from "./components/navbar";
 import DashboardContent from "./dashboardContent";
-import RoomPage from "./pages/RoomPage";
-import RoomForm from "../components/room/RoomForm";
 import ExistingRooms from "../components/room/ExistingRooms";
-import Hotels from "./pages/Hotels";
-import AddHotel from "./pages/AddHotel";
-import EditHotel from "./pages/EditHotel";
+import RoomPage from "./pages/Room/RoomPage";
+import AddHotel from "./pages/Hotel/AddHotel";
+import Hotels from "./pages/Hotel/Hotels";
+import EditHotel from "./pages/Hotel/EditHotel";
+import RoomForm from "./pages/Room/RoomForm";
 
 const { Content } = Layout;
 const AdminDashboard = () => {

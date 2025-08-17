@@ -22,7 +22,7 @@ import {
   FileTextOutlined,
   NumberOutlined,
 } from "@ant-design/icons";
-import { addHotel } from "../../components/utils/ApiFunctions";
+import { addHotel } from "../../../components/utils/ApiFunctions";
 import toast from "react-hot-toast";
 
 const { Title } = Typography;

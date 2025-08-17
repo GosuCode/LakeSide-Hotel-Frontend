@@ -4,8 +4,8 @@ import {
   updateRoom,
   getRoomById,
   getAllHotels,
-} from "../utils/ApiFunctions";
-import { uploadImageToCloudinary } from "../utils/cloudinaryUpload";
+} from "../../../components/utils/ApiFunctions";
+import { uploadImageToCloudinary } from "../../../components/utils/cloudinaryUpload";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   Form,
@@ -246,7 +246,7 @@ const RoomForm = () => {
           message.error("Error updating room.");
         }
       } else {
-        const success = await addRoom(
+        const roomData = {
           photoUrl,
           roomType,
           roomPrice,
@@ -255,8 +255,11 @@ const RoomForm = () => {
           description,
           roomCategory,
           amenities,
-          hotel
-        );
+          hotel: { id: hotel },
+          isBooked: false,
+        };
+
+        const success = await addRoom(roomData);
         if (success !== undefined) {
           message.success("A new room was added successfully!");
           form.resetFields();

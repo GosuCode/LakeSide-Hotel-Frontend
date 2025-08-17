@@ -5,11 +5,24 @@ import {
   TwitterOutlined,
 } from "@ant-design/icons";
 import logo from "../../assets/LakeSide.png";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const { Footer } = Layout;
 const { Title, Text, Link } = Typography;
 
 const MainFooter = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const location = useLocation();
+
+  const userRole = localStorage.getItem("userRole");
+
+  useEffect(() => {
+    setIsAdmin(userRole === "ROLE_ADMIN");
+  }, [userRole]);
+
+  if (isAdmin && location.pathname.startsWith("/admin")) return null;
+
   return (
     <Footer
       style={{

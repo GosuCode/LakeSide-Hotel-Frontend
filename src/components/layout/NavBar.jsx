@@ -23,10 +23,8 @@ const NavBar = () => {
     setIsAdmin(userRole === "ROLE_ADMIN");
   }, [userRole]);
 
-  // Hide navbar in admin pages if admin
   if (isAdmin && location.pathname.startsWith("/admin")) return null;
 
-  // AntD v5 Dropdown items
   const accountMenuItems = [
     ...(isAdmin
       ? [

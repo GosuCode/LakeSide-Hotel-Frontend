@@ -19,35 +19,12 @@ export const getJsonHeader = () => {
   };
 };
 
-/* This function adds a new room room to the database */
-export async function addRoom(
-  photoUrl,
-  roomType,
-  roomPrice,
-  bedType,
-  roomNumber,
-  description,
-  roomCategory,
-  amenities,
-  hotelId
-) {
-  const roomData = {
-    photoUrl: photoUrl,
-    roomType: roomType,
-    roomPrice: roomPrice,
-    bedType: bedType,
-    roomNumber: roomNumber,
-    description: description,
-    roomCategory: roomCategory,
-    amenities: amenities,
-    isBooked: false,
-    hotel: { id: hotelId },
-  };
+export async function addRoom(roomData) {
+  const headers = getJsonHeader();
 
-  const response = await api.post("/rooms/add/new-room-json", roomData, {
-    headers: getJsonHeader(),
+  const response = await api.post("/rooms/add/new-room", roomData, {
+    headers: headers,
   });
-
   return response.status === 200 || response.status === 201;
 }
 
@@ -359,5 +336,61 @@ export async function getRoomsWithPricing(checkIn, checkOut, roomType = null) {
     return response.data;
   } catch (error) {
     throw new Error("Error fetching rooms with pricing");
+  }
+}
+
+/* Dashboard API Functions */
+export async function getDashboardStats() {
+  try {
+    const response = await api.get("/dashboard/stats", {
+      headers: getHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error fetching dashboard stats: ${error.message}`);
+  }
+}
+
+export async function getBookingsByMonth() {
+  try {
+    const response = await api.get("/dashboard/bookings-by-month", {
+      headers: getHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error fetching monthly bookings: ${error.message}`);
+  }
+}
+
+export async function getRoomOccupancy() {
+  try {
+    const response = await api.get("/dashboard/room-occupancy", {
+      headers: getHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error fetching room occupancy: ${error.message}`);
+  }
+}
+
+export async function getRecentBookings() {
+  try {
+    const response = await api.get("/dashboard/recent-bookings", {
+      headers: getHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error fetching recent bookings: ${error.message}`);
+  }
+}
+
+export async function getTopPerformingHotels() {
+  try {
+    const response = await api.get("/dashboard/top-performing-hotels", {
+      headers: getHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error fetching top hotels: ${error.message}`);
   }
 }

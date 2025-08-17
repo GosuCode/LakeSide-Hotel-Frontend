@@ -178,9 +178,7 @@ const HotelRooms = () => {
             {rooms.map((room) => (
               <Col xs={24} sm={12} lg={8} key={room.id}>
                 <Card
-                  className={`room-card ${
-                    room.booked ? "booked" : "available"
-                  }`}
+                  className="room-card border-1 border-dark-subtle"
                   hoverable
                   actions={[
                     <Button
@@ -193,18 +191,15 @@ const HotelRooms = () => {
                     <Button
                       key="book"
                       type="primary"
-                      disabled={room.booked}
                       onClick={() => handleBookRoom(room.id)}
                     >
-                      {room.booked ? "Booked" : "Book Now"}
+                      Book Now
                     </Button>,
                   ]}
                 >
                   <div className="room-header">
                     <Title level={4}>{room.roomType}</Title>
-                    <Tag color={room.booked ? "red" : "green"}>
-                      {room.booked ? "Booked" : "Available"}
-                    </Tag>
+                    <Tag color="green">Available</Tag>
                   </div>
 
                   <div className="room-details">
@@ -215,7 +210,7 @@ const HotelRooms = () => {
                     >
                       <Space>
                         <BedIcon />
-                        <Text>Room {room.roomNumber}</Text>
+                        <Text>Room No. {room.roomNumber}</Text>
                       </Space>
 
                       <Space>

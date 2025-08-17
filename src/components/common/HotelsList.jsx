@@ -66,10 +66,7 @@ const HotelsList = () => {
               hoverable
               cover={
                 <Image
-                  src={
-                    hotel.imageUrl ||
-                    "https://via.placeholder.com/400x250?text=No+Image"
-                  }
+                  src={hotel.imageUrl}
                   alt={hotel.name}
                   style={{ height: "250px", objectFit: "cover" }}
                 />

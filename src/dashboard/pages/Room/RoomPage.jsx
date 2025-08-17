@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAllRooms } from "../../components/utils/ApiFunctions";
+import { getAllRooms } from "../../../components/utils/ApiFunctions";
 import { Button, Typography, Card, Row, Col, Spin } from "antd";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
