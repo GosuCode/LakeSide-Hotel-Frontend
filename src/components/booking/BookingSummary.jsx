@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import moment from "moment";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const BookingSummary = ({ booking, payment, isFormValid, onConfirm }) => {
   const checkInDate = moment(booking.checkInDate);
@@ -99,3 +100,10 @@ const BookingSummary = ({ booking, payment, isFormValid, onConfirm }) => {
 };
 
 export default BookingSummary;
+
+BookingSummary.propTypes = {
+  booking: PropTypes.object.isRequired,
+  payment: PropTypes.number.isRequired,
+  isFormValid: PropTypes.bool.isRequired,
+  onConfirm: PropTypes.func.isRequired,
+};

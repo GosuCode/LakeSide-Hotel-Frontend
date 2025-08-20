@@ -23,12 +23,9 @@
 .hotel-header {
   background: linear-gradient(135deg, #e6e6e9 0%, #eda694 100%);
   color: white;
-  height: 200px;
   padding: 40px;
   border-radius: 16px;
   margin-bottom: 30px;
-  position: relative;
-  overflow: hidden;
 }
 
 .back-button {

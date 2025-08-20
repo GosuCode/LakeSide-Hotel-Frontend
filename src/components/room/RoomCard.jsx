@@ -46,15 +46,7 @@ const RoomCard = ({ room }) => {
           <Text type="secondary" style={{ textTransform: "capitalize" }}>
             {room.roomCategory} - {room.roomType}
           </Text>
-          <Link to={`/room/${room.id}`}>
-            <Title
-              level={4}
-              style={{ margin: "4px 0", cursor: "pointer", color: "#1890ff" }}
-            >
-              Room No: {room.roomNumber}
-            </Title>
-          </Link>
-          <Text>{room.description}</Text>
+          <p style={{ margin: "4px 0" }}>Room No: {room.roomNumber}</p>
           <div style={{ marginTop: 8 }}>
             <Tag color="blue">{room.bedType}</Tag>
             {room.amenities && room.amenities.length > 0 ? (

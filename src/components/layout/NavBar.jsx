@@ -54,6 +54,11 @@ const NavBar = () => {
             icon: <LoginOutlined />,
             label: <Link to="/login">Login</Link>,
           },
+          {
+            key: "signup",
+            icon: <UserOutlined />,
+            label: <Link to="/register">Sign Up</Link>,
+          },
         ]),
   ];
 
@@ -81,6 +86,11 @@ const NavBar = () => {
           <img src={logo} alt="lakeside" style={{ width: "60px" }} />
         </Link>
         <div style={{ display: "flex", alignItems: "center" }}>
+          {location.pathname !== "/" && (
+            <NavLink to="/" style={{ marginRight: "20px", color: "#000" }}>
+              Home
+            </NavLink>
+          )}
           <NavLink
             to="/browse-all-rooms"
             style={{ marginRight: "20px", color: "#000" }}
@@ -93,18 +103,39 @@ const NavBar = () => {
           >
             Nearby Hotels
           </NavLink>
-          <NavLink
-            to="/my-bookings"
-            style={{ marginRight: "20px", color: "#000" }}
-          >
-            My Bookings
-          </NavLink>
+          {isLoggedIn ? (
+            <>
+              <NavLink
+                to="/my-bookings"
+                style={{ marginRight: "20px", color: "#000" }}
+              >
+                My Bookings
+              </NavLink>
 
-          <Dropdown menu={{ items: accountMenuItems }} trigger={["click"]}>
-            <Button type="text" icon={<UserOutlined />}>
-              Account
-            </Button>
-          </Dropdown>
+              <Dropdown menu={{ items: accountMenuItems }} trigger={["click"]}>
+                <Button type="text" icon={<UserOutlined />}>
+                  Account
+                </Button>
+              </Dropdown>
+            </>
+          ) : (
+            <>
+              <Button
+                type="text"
+                icon={<LoginOutlined />}
+                style={{ marginRight: "8px" }}
+              >
+                <Link to="/login" style={{ color: "inherit" }}>
+                  Login
+                </Link>
+              </Button>
+              <Button type="primary">
+                <Link to="/register" style={{ color: "inherit" }}>
+                  Sign Up
+                </Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </Header>

@@ -1,5 +1,5 @@
-import { Typography, Button, Row, Col } from "antd";
-import { Link } from "react-router-dom";
+import { Typography, Row, Col } from "antd";
+import RoomSearch from "../common/RoomSearch";
 
 const { Title, Paragraph } = Typography;
 
@@ -16,11 +16,7 @@ const MainHeader = () => {
           <Paragraph style={{ color: "#eee", fontSize: "1.2rem" }}>
             Experience the Best Hospitality in Town
           </Paragraph>
-          <Link to="/browse-all-rooms">
-            <Button type="primary" size="large">
-              Browse Rooms
-            </Button>
-          </Link>
+          <RoomSearch />
         </Col>
       </Row>
     </header>

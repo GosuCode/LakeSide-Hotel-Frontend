@@ -33,6 +33,7 @@ const BookingForm = () => {
     checkOutDate: "",
     numOfAdults: 1,
     numOfChildren: 0,
+    phoneNumber: "",
   });
 
   const [searchParams] = useSearchParams();
@@ -115,9 +116,7 @@ const BookingForm = () => {
   const handleConfirm = async () => {
     try {
       const confirmationCode = await bookRoom(roomId, booking);
-      toast.success(
-        "Booking confirmed successfully! Check your email for details."
-      );
+      toast.success("Booking confirmed successfully!");
       navigate("/booking-success", { state: { message: confirmationCode } });
     } catch (err) {
       toast.error("Booking failed. Please try again.");
@@ -138,6 +137,7 @@ const BookingForm = () => {
               guestEmail: currentUser,
               numOfAdults: 1,
               numOfChildren: 0,
+              phoneNumber: "",
             }}
           >
             <Form.Item
@@ -168,6 +168,15 @@ const BookingForm = () => {
               ]}
             >
               <Input />
+            </Form.Item>
+
+            <Form.Item label="Phone Number" name="phoneNumber">
+              <InputNumber
+                min={10}
+                max={10}
+                placeholder="Enter your phone number"
+                style={{ width: "100%" }}
+              />
             </Form.Item>
 
             <Form.Item label="Lodging Period" required>

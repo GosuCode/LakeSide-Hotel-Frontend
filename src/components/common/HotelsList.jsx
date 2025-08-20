@@ -53,14 +53,14 @@ const HotelsList = () => {
   return (
     <div style={{ padding: "24px 0" }}>
       <div style={{ textAlign: "center", marginBottom: "32px" }}>
-        <Title level={2}>Our Hotels</Title>
+        <Title level={2}>Top Hotels</Title>
         <Text type="secondary">
           Discover our collection of exceptional hotels
         </Text>
       </div>
 
       <Row gutter={[24, 24]}>
-        {hotels.map((hotel) => (
+        {hotels.slice(0, 6).map((hotel) => (
           <Col xs={24} sm={12} lg={8} key={hotel.id}>
             <Card
               hoverable

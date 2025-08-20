@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getRoomById } from "../utils/ApiFunctions";
 import BookingForm from "../booking/BookingForm";
 import RoomCarousel from "../common/RoomCarousel";
+import { useAuth } from "../auth/AuthProvider";
 
 import {
   Descriptions,
@@ -42,12 +43,28 @@ const defaultAmenities = ["Wifi", "Breakfast", "Parking Space", "Laundry"];
 
 const Checkout = () => {
   const { roomId } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [roomInfo, setRoomInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!user) {
+      navigate("/login", {
+        state: {
+          from: `/book-room/${roomId}`,
+          message: "Please log in to book a room",
+        },
+      });
+      return;
+    }
+  }, [user, navigate, roomId]);
+
+  useEffect(() => {
+    if (!user) return;
+
     setIsLoading(true);
     getRoomById(roomId)
       .then((data) => {
@@ -58,7 +75,7 @@ const Checkout = () => {
         setError(err.message || "Failed to load room info");
         setIsLoading(false);
       });
-  }, [roomId]);
+  }, [roomId, user]);
 
   if (isLoading) {
     return (

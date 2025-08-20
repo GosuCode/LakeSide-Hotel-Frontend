@@ -1,5 +1,24 @@
 import { useState, useEffect } from "react";
+import {
+  Card,
+  Row,
+  Col,
+  Button,
+  Spin,
+  Alert,
+  Tag,
+  Space,
+  Typography,
+} from "antd";
+import {
+  EnvironmentOutlined,
+  PhoneOutlined,
+  MailOutlined,
+  HomeOutlined,
+} from "@ant-design/icons";
 import "./NearbyHotelsSearch.css";
+
+const { Title, Text } = Typography;
 
 const NearbyHotelsSearch = () => {
   const [hotels, setHotels] = useState([]);
@@ -40,7 +59,6 @@ const NearbyHotelsSearch = () => {
 
   const findNearbyHotels = async (latitude, longitude) => {
     try {
-      // Use full backend URL to avoid proxy issues
       const response = await fetch(
         `http://localhost:9192/api/v1/hotels/nearby?lat=${latitude}&lon=${longitude}&k=10`
       );
@@ -79,9 +97,11 @@ const NearbyHotelsSearch = () => {
     return (
       <div className="nearby-hotels-container">
         <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <h2>Finding nearby hotels...</h2>
-          <p>Please allow location access to continue</p>
+          <Spin size="large" />
+          <Title level={2} style={{ marginTop: 16 }}>
+            Finding nearby hotels...
+          </Title>
+          <Text type="secondary">Please allow location access to continue</Text>
         </div>
       </div>
     );
@@ -90,64 +110,119 @@ const NearbyHotelsSearch = () => {
   if (error) {
     return (
       <div className="nearby-hotels-container">
-        <div className="error-container">
-          <h2>Location Access Required</h2>
-          <p className="error-message">{error}</p>
-          <button onClick={retryLocation} className="btn-primary">
-            Try Again
-          </button>
-        </div>
+        <Alert
+          message="Location Access Required"
+          description={error}
+          type="warning"
+          showIcon
+          action={
+            <Button size="small" type="primary" onClick={retryLocation}>
+              Try Again
+            </Button>
+          }
+        />
       </div>
     );
   }
 
   return (
     <div className="nearby-hotels-container">
-      <h2>Nearby Hotels</h2>
-      <p className="location-info">Showing hotels near your current location</p>
+      <div className="header-section">
+        <Title level={2}>Nearby Hotels</Title>
+        <Text type="secondary">Showing hotels near your current location</Text>
+      </div>
 
       {hotels.length > 0 ? (
         <div className="results-container">
-          <h3>Found {hotels.length} hotels nearby</h3>
-          <div className="hotels-list">
-            {hotels.map((hotel, index) => (
-              <div
-                key={hotel.id}
-                className={`hotel-card ${index === 0 ? "nearest" : ""}`}
-              >
-                <div className="hotel-header">
-                  <h4>{hotel.name}</h4>
-                  {index === 0 && (
-                    <span className="nearest-badge">Nearest</span>
-                  )}
-                </div>
-                <div className="hotel-details">
-                  <p>
-                    <strong>Distance:</strong> {hotel.distance.toFixed(2)} km
-                  </p>
-                  <p>
-                    <strong>Coordinates:</strong> {hotel.latitude.toFixed(6)},{" "}
-                    {hotel.longitude.toFixed(6)}
-                  </p>
-                  <div className="hotel-actions">
-                    <button
-                      className="btn-view-rooms"
-                      onClick={() =>
-                        (window.location.href = `/hotel/${hotel.id}/rooms`)
-                      }
-                    >
-                      View Rooms
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="results-header">
+            <Title level={3}>Found {hotels.length} hotels nearby</Title>
           </div>
+
+          <Row gutter={[24, 24]}>
+            {hotels.map((hotel, index) => (
+              <Col xs={24} sm={12} lg={8} xl={6} key={hotel.id}>
+                <Card
+                  hoverable
+                  className={`hotel-card ${index === 0 ? "nearest" : ""}`}
+                  onClick={() =>
+                    (window.location.href = `/hotel/${hotel.id}/rooms`)
+                  }
+                  cover={
+                    <div className="hotel-image-container">
+                      <img
+                        alt={hotel.name}
+                        src={hotel.imageUrl}
+                        className="hotel-image"
+                      />
+                      {index === 0 && (
+                        <Tag color="gold" className="nearest-badge">
+                          <EnvironmentOutlined /> Nearest
+                        </Tag>
+                      )}
+                    </div>
+                  }
+                >
+                  <div className="hotel-content">
+                    <Title level={4} className="hotel-name">
+                      {hotel.name}
+                    </Title>
+
+                    <div className="hotel-info">
+                      <Space
+                        direction="vertical"
+                        size="small"
+                        style={{ width: "100%" }}
+                      >
+                        <div className="info-item">
+                          <EnvironmentOutlined className="info-icon" />
+                          <Text>
+                            {hotel.address || "Address not available"}
+                          </Text>
+                        </div>
+
+                        <div className="info-item">
+                          <HomeOutlined className="info-icon" />
+                          <Text>
+                            {hotel.roomsCount
+                              ? `${hotel.roomsCount} Rooms Available`
+                              : "Rooms info not available"}
+                          </Text>
+                        </div>
+
+                        <div className="info-item">
+                          <PhoneOutlined className="info-icon" />
+                          <Text>
+                            {hotel.contact || "Contact not available"}
+                          </Text>
+                        </div>
+
+                        <div className="info-item">
+                          <MailOutlined className="info-icon" />
+                          <Text>{hotel.email || "Email not available"}</Text>
+                        </div>
+
+                        <div className="distance-info">
+                          <Tag color="blue">
+                            <EnvironmentOutlined /> {hotel.distance.toFixed(2)}{" "}
+                            km away
+                          </Tag>
+                        </div>
+                      </Space>
+                    </div>
+                  </div>
+                </Card>
+              </Col>
+            ))}
+          </Row>
         </div>
       ) : (
         <div className="no-results">
-          <h3>No hotels found nearby</h3>
-          <p>Try refreshing the page or check your location settings.</p>
+          <Alert
+            message="No hotels found nearby"
+            description="Try refreshing the page or check your location settings."
+            type="info"
+            showIcon
+          />
         </div>
       )}
     </div>

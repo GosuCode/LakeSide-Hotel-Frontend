@@ -9,7 +9,6 @@ import HotelDetails from "./components/hotel/HotelDetails";
 import HotelRooms from "./components/hotel/HotelRooms";
 import NearbyHotelsSearch from "./components/hotel/NearbyHotelsSearch";
 import BookingSuccess from "./components/booking/BookingSuccess";
-import Bookings from "./components/booking/Bookings";
 import Login from "./components/auth/Login";
 import Registration from "./components/auth/Registration";
 import Profile from "./components/auth/Profile";
@@ -44,7 +43,6 @@ function App() {
             <Route path="/browse-all-rooms" element={<RoomListing />} />
             <Route path="/book-room/:roomId" element={<Checkout />} />
             <Route path="/booking-success" element={<BookingSuccess />} />
-            <Route path="/existing-bookings" element={<Bookings />} />
             <Route path="/my-bookings" element={<YourBookings />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
@@ -56,13 +54,13 @@ function App() {
         <Toaster
           position="top-right"
           toastOptions={{
-            duration: 4000,
+            duration: 2000,
             style: {
               background: "#363636",
               color: "#fff",
             },
             success: {
-              duration: 3000,
+              duration: 1500,
               iconTheme: {
                 primary: "#4ade80",
                 secondary: "#fff",
