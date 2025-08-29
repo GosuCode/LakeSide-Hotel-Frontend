@@ -54,7 +54,7 @@ const Login = () => {
         display: "flex",
         justifyContent: "center",
         padding: "50px",
-        height: "100vh",
+        height: "50vh",
       }}
     >
       <Card style={{ width: 400 }} bordered={true}>

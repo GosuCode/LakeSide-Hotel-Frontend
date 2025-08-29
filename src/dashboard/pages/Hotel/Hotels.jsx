@@ -225,7 +225,7 @@ const Hotels = () => {
           <Button
             type="primary"
             icon={<PlusOutlined />}
-            onClick={() => navigate("/admin/hotels/add")}
+            onClick={() => navigate("/admin/hotels/new")}
             size="large"
           >
             Add New Hotel
