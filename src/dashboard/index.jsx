@@ -8,6 +8,7 @@ import Hotels from "./pages/Hotel/Hotels";
 import HotelForm from "./pages/Hotel/HotelForm";
 import RoomForm from "./pages/Room/RoomForm";
 import Bookings from "../components/booking/Bookings";
+import Customers from "./pages/Customers/Customers";
 
 const { Content } = Layout;
 const AdminDashboard = () => {
@@ -31,6 +32,7 @@ const AdminDashboard = () => {
             <Route path="/rooms" element={<RoomPage />} />
             <Route path="/add-room" element={<RoomForm />} />
             <Route path="/bookings" element={<Bookings />} />
+            <Route path="/customers" element={<Customers />} />
             <Route path="/edit-room/:roomId" element={<RoomForm />} />
           </Routes>
         </Content>
