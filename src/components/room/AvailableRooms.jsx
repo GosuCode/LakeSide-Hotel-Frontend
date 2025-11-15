@@ -11,7 +11,7 @@ import {
   Checkbox,
   Pagination,
 } from "antd";
-import { DollarOutlined, FilterOutlined } from "@ant-design/icons";
+import { FilterOutlined } from "@ant-design/icons";
 import { BedIcon } from "lucide-react";
 import PropTypes from "prop-types";
 import { useState, useMemo, useEffect } from "react";
@@ -20,7 +20,7 @@ const { Title, Text } = Typography;
 
 const AvailableRooms = ({ rooms, handleBookRoom, handleViewRoomDetails }) => {
   const [filters, setFilters] = useState({
-    priceRange: [0, 1000],
+    priceRange: [0, 50000],
     roomType: "",
     bedType: "",
     amenities: [],
@@ -276,8 +276,7 @@ const AvailableRooms = ({ rooms, handleBookRoom, handleViewRoomDetails }) => {
                             </Space>
 
                             <Space>
-                              <DollarOutlined />
-                              <Text strong>Rs. {room.roomPrice}/night</Text>
+                              <Text strong>Rs. {room.roomPrice} / night</Text>
                             </Space>
 
                             {room.photo && (

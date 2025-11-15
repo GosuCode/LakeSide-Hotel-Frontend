@@ -24,8 +24,7 @@ const HotelsList = () => {
       const hotelsData = await getAllHotels();
       setHotels(hotelsData);
     } catch (error) {
-      message.error("Failed to fetch hotels");
-      console.error(error);
+      message.error(`Failed to fetch hotels: ${error.message}`);
     } finally {
       setLoading(false);
     }

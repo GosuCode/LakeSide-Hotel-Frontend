@@ -98,11 +98,6 @@ const MainFooter = () => {
           </Space>
         </Col>
       </Row>
-
-      {/* Copyright */}
-      <div style={{ textAlign: "center", marginTop: 50, color: "#999" }}>
-        © {new Date().getFullYear()} LakeSide Hotel. All rights reserved.
-      </div>
     </Footer>
   );
 };

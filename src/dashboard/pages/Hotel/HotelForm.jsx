@@ -79,6 +79,8 @@ const HotelForm = () => {
         setImagePreview(hotel.imageUrl);
         // Store the existing image URL for updates
         setPhoto(hotel.imageUrl);
+        // Set form field value for validation
+        form.setFieldsValue({ photo: hotel.imageUrl });
       }
     } catch (error) {
       toast.error("Failed to fetch hotel details");
@@ -105,6 +107,8 @@ const HotelForm = () => {
 
       setPhoto(file);
       setImagePreview(URL.createObjectURL(file));
+      // Set form field value for validation
+      form.setFieldsValue({ photo: file });
     } else {
       message.error("No file found in info.file");
     }
@@ -129,6 +133,18 @@ const HotelForm = () => {
   const onFinish = async (values) => {
     if (imageUploading) {
       message.warning("Please wait for image upload to complete");
+      return;
+    }
+
+    // Validate image is uploaded
+    if (!photo) {
+      message.error("Please upload a hotel photo!");
+      form.setFields([
+        {
+          name: "photo",
+          errors: ["Please upload a hotel photo!"],
+        },
+      ]);
       return;
     }
 
@@ -243,6 +259,7 @@ const HotelForm = () => {
             roomsCount: 0,
             description: "",
             imageUrl: "",
+            photo: null,
           }}
         >
           <Form.Item
@@ -250,7 +267,11 @@ const HotelForm = () => {
             label="Hotel Name"
             rules={[
               { required: true, message: "Please enter the hotel name!" },
-              { min: 2, message: "Hotel name must be at least 2 characters!" },
+              { min: 5, message: "Hotel name must be at least 5 characters!" },
+              {
+                pattern: /^[a-zA-Z0-9\s]+$/,
+                message: "Hotel name can only contain letters and numbers!",
+              },
             ]}
           >
             <Input
@@ -408,10 +429,21 @@ const HotelForm = () => {
           </Form.Item>
 
           <Form.Item
+            name="photo"
             label="Hotel Photo"
             rules={[
-              { required: true, message: "Please upload a hotel photo!" },
+              {
+                validator: () => {
+                  if (!photo) {
+                    return Promise.reject(
+                      new Error("Please upload a hotel photo!")
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              },
             ]}
+            required
           >
             <div style={{ marginBottom: 16 }}>
               <Upload
@@ -461,6 +493,9 @@ const HotelForm = () => {
                     onClick={() => {
                       setPhoto(null);
                       setImagePreview("");
+                      form.setFieldsValue({ photo: null });
+                      // Trigger validation
+                      form.validateFields(["photo"]);
                     }}
                   >
                     Remove Image

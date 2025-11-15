@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getAllRooms, getAllHotels } from "../utils/ApiFunctions";
 import RoomCard from "./RoomCard";
 import { Col, Container, Row, Card } from "react-bootstrap";
-import { Button } from "antd";
+import { Button, Skeleton, Alert } from "antd";
 import RoomPaginator from "../common/RoomPaginator";
 import RoomFilters from "./RoomFilters";
 
@@ -18,7 +18,7 @@ const Room = () => {
 
   // Filter states
   const [filters, setFilters] = useState({
-    priceRange: [0, 1000],
+    priceRange: [0, 50000],
     roomType: "",
     roomCategory: "",
     bedType: "",
@@ -61,11 +61,140 @@ const Room = () => {
         setIsLoading(false);
       });
   }, []);
+
+  // Loading skeleton component
+  const LoadingSkeleton = () => (
+    <Container>
+      <Card
+        style={{
+          padding: "10px",
+          marginBottom: "10px",
+          borderRadius: "10px",
+          backgroundColor: "#def0fa",
+        }}
+      >
+        <Row justify="center" align="middle" style={{ alignItems: "center" }}>
+          <Col>
+            <Skeleton.Input active size="small" style={{ width: 100 }} />
+          </Col>
+          <Col>
+            <Skeleton.Button active size="small" />
+          </Col>
+          <Col>
+            <Skeleton.Button active size="small" />
+          </Col>
+          <Col>
+            <Skeleton.Button active size="small" />
+          </Col>
+        </Row>
+      </Card>
+      <Row>
+        {/* Filter Sidebar Skeleton */}
+        <Col md={3} className="mb-4">
+          <Card className="shadow-sm">
+            <Card.Header className="bg-primary text-white">
+              <Skeleton.Input active size="small" style={{ width: 120 }} />
+            </Card.Header>
+            <Card.Body>
+              <Skeleton active paragraph={{ rows: 8 }} />
+            </Card.Body>
+          </Card>
+        </Col>
+
+        {/* Room Cards Skeleton - Horizontal Layout */}
+        <Col md={9}>
+          <Row>
+            {[...Array(5)].map((_, index) => (
+              <Col md={12} key={index} className="mb-4">
+                <Card>
+                  <Row>
+                    {/* Left: Image */}
+                    <Col md={4}>
+                      <Skeleton.Image
+                        active
+                        style={{ width: 300, height: 250 }}
+                      />
+                    </Col>
+                    {/* Middle: Hotel and Room Details */}
+                    <Col md={5} className="p-3">
+                      <Skeleton.Input
+                        active
+                        size="small"
+                        style={{ width: 200, marginBottom: 10 }}
+                      />
+                      <Skeleton.Input
+                        active
+                        size="small"
+                        style={{ width: 150, marginBottom: 15 }}
+                      />
+                      <Skeleton active paragraph={{ rows: 2 }} />
+                      <div style={{ marginTop: 10 }}>
+                        <Skeleton.Button
+                          active
+                          size="small"
+                          style={{ marginRight: 5, marginBottom: 5 }}
+                        />
+                        <Skeleton.Button
+                          active
+                          size="small"
+                          style={{ marginRight: 5, marginBottom: 5 }}
+                        />
+                        <Skeleton.Button
+                          active
+                          size="small"
+                          style={{ marginRight: 5, marginBottom: 5 }}
+                        />
+                      </div>
+                    </Col>
+                    {/* Right: Price and Actions */}
+                    <Col md={3} className="p-3">
+                      <Skeleton.Button
+                        active
+                        size="small"
+                        style={{ width: "100%", marginBottom: 15 }}
+                      />
+                      <Skeleton.Input
+                        active
+                        size="large"
+                        style={{ width: "100%", marginBottom: 10 }}
+                      />
+                      <Skeleton.Button
+                        active
+                        size="default"
+                        style={{ width: "100%", marginBottom: 10 }}
+                      />
+                      <Skeleton.Button
+                        active
+                        size="default"
+                        style={{ width: "100%" }}
+                      />
+                    </Col>
+                  </Row>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        </Col>
+      </Row>
+    </Container>
+  );
+
   if (isLoading) {
-    return <div>Loading rooms.....</div>;
+    return <LoadingSkeleton />;
   }
+
   if (error) {
-    return <div className=" text-danger">Error : {error}</div>;
+    return (
+      <Container style={{ marginTop: 40 }}>
+        <Alert
+          message="Error Loading Rooms"
+          description={error}
+          type="error"
+          showIcon
+          closable
+        />
+      </Container>
+    );
   }
 
   const handlePageChange = (pageNumber) => {
@@ -173,7 +302,7 @@ const Room = () => {
       >
         <Row justify="center" align="middle" style={{ alignItems: "center" }}>
           <Col>
-            <b>SORT BY:</b>
+            <b style={{ fontSize: "16px" }}>SORT BY:</b>
           </Col>
           <Col>
             <Button

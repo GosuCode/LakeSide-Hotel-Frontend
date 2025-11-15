@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 const RoomPaginator = ({ currentPage, totalPages, onPageChange }) => {
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
   return (
@@ -24,3 +26,9 @@ const RoomPaginator = ({ currentPage, totalPages, onPageChange }) => {
 };
 
 export default RoomPaginator;
+
+RoomPaginator.propTypes = {
+  currentPage: PropTypes.number.isRequired,
+  totalPages: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+};

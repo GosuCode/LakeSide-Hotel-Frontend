@@ -317,7 +317,12 @@ const RoomForm = () => {
           name="roomNumber"
           rules={[{ required: true }]}
         >
-          <Input type="number" placeholder="Enter room number" />
+          <Input
+            type="number"
+            max={300}
+            min={1}
+            placeholder="Enter room number (1-300)"
+          />
         </Form.Item>
 
         <Form.Item
@@ -334,7 +339,11 @@ const RoomForm = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item label="Price" name="roomPrice" rules={[{ required: true }]}>
+        <Form.Item
+          label="Price"
+          name="roomPrice"
+          rules={[{ required: true, message: "Please enter a valid price" }]}
+        >
           <Input type="number" placeholder="Enter price" />
         </Form.Item>
 

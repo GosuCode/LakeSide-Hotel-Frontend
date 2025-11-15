@@ -27,13 +27,31 @@ const RoomFilters = ({
             <Slider
               range
               min={0}
-              max={1000}
+              max={50000}
               value={filters.priceRange}
               onChange={(value) =>
                 setFilters({ ...filters, priceRange: value })
               }
               tooltip={{ formatter: (value) => `Rs. ${value}` }}
             />
+          </div>
+
+          {/* Hotel Filter */}
+          <div className="mb-3">
+            <label className="form-label">Hotel</label>
+            <Form.Select
+              value={filters.hotelId}
+              onChange={(e) =>
+                setFilters({ ...filters, hotelId: e.target.value })
+              }
+            >
+              <option value="">All Hotels</option>
+              {hotels.map((hotel) => (
+                <option key={hotel.id} value={hotel.id}>
+                  {hotel.name}
+                </option>
+              ))}
+            </Form.Select>
           </div>
 
           {/* Room Type */}
@@ -106,24 +124,6 @@ const RoomFilters = ({
                 ))}
               </Checkbox.Group>
             </div>
-          </div>
-
-          {/* Hotel Filter */}
-          <div className="mb-3">
-            <label className="form-label">Hotel</label>
-            <Form.Select
-              value={filters.hotelId}
-              onChange={(e) =>
-                setFilters({ ...filters, hotelId: e.target.value })
-              }
-            >
-              <option value="">All Hotels</option>
-              {hotels.map((hotel) => (
-                <option key={hotel.id} value={hotel.id}>
-                  {hotel.name}
-                </option>
-              ))}
-            </Form.Select>
           </div>
 
           {/* Availability */}

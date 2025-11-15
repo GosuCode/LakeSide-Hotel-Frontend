@@ -44,9 +44,41 @@ const RoomCarousel = ({ title }) => {
     );
   }
 
+  const getRoomsFromDifferentHotels = () => {
+    const hotelMap = new Map();
+    const uniqueRooms = [];
+    const allRooms = [];
+
+    for (const room of rooms) {
+      const hotelId = room.hotel?.id || room.hotelId || null;
+
+      if (hotelId && !hotelMap.has(hotelId)) {
+        hotelMap.set(hotelId, true);
+        uniqueRooms.push(room);
+      }
+
+      if (hotelId) {
+        allRooms.push(room);
+      }
+    }
+
+    if (uniqueRooms.length < 10) {
+      for (const room of allRooms) {
+        if (uniqueRooms.length >= 10) break;
+        if (!uniqueRooms.some((r) => r.id === room.id)) {
+          uniqueRooms.push(room);
+        }
+      }
+    }
+
+    return uniqueRooms.slice(0, 10);
+  };
+
+  const displayRooms = getRoomsFromDifferentHotels();
+
   const settings = {
     dots: false,
-    infinite: rooms.length > 4,
+    infinite: displayRooms.length > 4,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
@@ -82,7 +114,7 @@ const RoomCarousel = ({ title }) => {
       </Title>
 
       <Slider {...settings}>
-        {rooms.map((room) => (
+        {displayRooms.map((room) => (
           <div key={room.id} style={{ padding: "0 8px", margin: "0 20px" }}>
             <Card
               hoverable

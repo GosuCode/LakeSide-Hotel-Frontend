@@ -32,6 +32,7 @@ import {
   CarOutlined,
   CoffeeOutlined,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
@@ -40,6 +41,7 @@ const YourBookings = () => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   const userId = localStorage.getItem("userId");
 
@@ -350,7 +352,7 @@ const YourBookings = () => {
                             <Statistic
                               title="Per Night"
                               value={booking.room.roomPrice}
-                              prefix="$"
+                              prefix="Rs."
                               valueStyle={{
                                 fontSize: "16px",
                                 color: "#52c41a",
@@ -361,7 +363,7 @@ const YourBookings = () => {
                             <Statistic
                               title="Total"
                               value={booking.room.roomPrice}
-                              prefix="$"
+                              prefix="Rs."
                               valueStyle={{
                                 fontSize: "16px",
                                 color: "#fa8c16",
@@ -456,6 +458,7 @@ const YourBookings = () => {
                   padding: "8px 24px",
                   height: "auto",
                 }}
+                onClick={() => navigate("/browse-all-rooms")}
               >
                 Browse Hotels
               </Button>

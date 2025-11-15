@@ -100,7 +100,7 @@ export async function getAllHotels() {
     const response = await api.get("/api/v1/hotels/all");
     return response.data;
   } catch (error) {
-    throw new Error("Error fetching hotels");
+    throw new Error(`Error fetching hotels: ${error.message}`);
   }
 }
 

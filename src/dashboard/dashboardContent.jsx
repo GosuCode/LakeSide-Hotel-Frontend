@@ -9,21 +9,21 @@ import {
   Alert,
   Typography,
 } from "antd";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  LineChart,
-  Line,
-} from "recharts";
+// import {
+//   BarChart,
+//   Bar,
+//   XAxis,
+//   YAxis,
+//   CartesianGrid,
+//   Tooltip,
+//   Legend,
+//   ResponsiveContainer,
+//   PieChart,
+//   Pie,
+//   Cell,
+//   LineChart,
+//   Line,
+// } from "recharts";
 import {
   UserOutlined,
   HomeOutlined,
@@ -32,8 +32,8 @@ import {
 } from "@ant-design/icons";
 import {
   getDashboardStats,
-  getBookingsByMonth,
-  getRoomOccupancy,
+  // getBookingsByMonth,
+  // getRoomOccupancy,
   getRecentBookings,
   getTopPerformingHotels,
 } from "../components/utils/ApiFunctions";
@@ -43,8 +43,8 @@ const { Title, Text } = Typography;
 
 export default function DashboardContent() {
   const [stats, setStats] = useState(null);
-  const [monthlyBookings, setMonthlyBookings] = useState([]);
-  const [roomOccupancy, setRoomOccupancy] = useState([]);
+  // const [monthlyBookings, setMonthlyBookings] = useState([]);
+  // const [roomOccupancy, setRoomOccupancy] = useState([]);
   const [recentBookings, setRecentBookings] = useState([]);
   const [topHotels, setTopHotels] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,18 +57,22 @@ export default function DashboardContent() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const [statsData, monthlyData, occupancyData, recentData, hotelsData] =
-        await Promise.all([
-          getDashboardStats(),
-          getBookingsByMonth(),
-          getRoomOccupancy(),
-          getRecentBookings(),
-          getTopPerformingHotels(),
-        ]);
+      const [
+        statsData,
+        // monthlyData, occupancyData,
+        recentData,
+        hotelsData,
+      ] = await Promise.all([
+        getDashboardStats(),
+        // getBookingsByMonth(),
+        // getRoomOccupancy(),
+        getRecentBookings(),
+        getTopPerformingHotels(),
+      ]);
 
       setStats(statsData);
-      setMonthlyBookings(monthlyData);
-      setRoomOccupancy(occupancyData);
+      // setMonthlyBookings(monthlyData);
+      // setRoomOccupancy(occupancyData);
       setRecentBookings(recentData);
       setTopHotels(hotelsData);
     } catch (err) {
@@ -111,7 +115,7 @@ export default function DashboardContent() {
       title: "Amount",
       dataIndex: "totalAmount",
       key: "totalAmount",
-      render: (amount) => `$${amount || 0}`,
+      render: (amount) => `Rs.${amount || 0}`,
     },
     {
       title: "Confirmation",
@@ -125,7 +129,7 @@ export default function DashboardContent() {
     },
   ];
 
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
+  // const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
   if (loading) {
     return (
@@ -206,7 +210,7 @@ export default function DashboardContent() {
             <Statistic
               title="Total Revenue"
               value={stats?.totalRevenue || 0}
-              prefix="$"
+              prefix="Rs."
               valueStyle={{ color: "#52c41a", fontSize: "24px" }}
             />
           </Card>
@@ -277,7 +281,7 @@ export default function DashboardContent() {
       </Row>
 
       {/* Charts Row */}
-      <Row gutter={[16, 16]} style={{ marginBottom: "32px" }}>
+      {/* <Row gutter={[16, 16]} style={{ marginBottom: "32px" }}>
         <Col xs={24} lg={12}>
           <Card title="Monthly Bookings Trend" style={{ height: "400px" }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -324,10 +328,10 @@ export default function DashboardContent() {
             </ResponsiveContainer>
           </Card>
         </Col>
-      </Row>
+      </Row> */}
 
       {/* Room Occupancy Bar Chart */}
-      <Row gutter={[16, 16]} style={{ marginBottom: "32px" }}>
+      {/* <Row gutter={[16, 16]} style={{ marginBottom: "32px" }}>
         <Col span={24}>
           <Card title="Room Occupancy by Type" style={{ height: "400px" }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -344,7 +348,7 @@ export default function DashboardContent() {
             </ResponsiveContainer>
           </Card>
         </Col>
-      </Row>
+      </Row> */}
     </div>
   );
 }
