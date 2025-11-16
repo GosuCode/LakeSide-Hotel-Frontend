@@ -225,6 +225,13 @@ const RoomForm = () => {
         }
       }
 
+      // Frontend validation – ensure a photo is provided when creating a new room
+      if (!isEditMode && !photoUrl) {
+        message.error("Please upload a room photo before saving.");
+        setUploading(false);
+        return;
+      }
+
       if (isEditMode) {
         const roomData = {
           roomType,
@@ -291,7 +298,7 @@ const RoomForm = () => {
         <Form.Item
           label="Room Type"
           name="roomType"
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: "Please select a room type" }]}
         >
           <Select placeholder="Select room type">
             {roomTypes.map((type) => (
@@ -302,7 +309,11 @@ const RoomForm = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item label="Bed Type" name="bedType" rules={[{ required: true }]}>
+        <Form.Item
+          label="Bed Type"
+          name="bedType"
+          rules={[{ required: true, message: "Please select a bed type" }]}
+        >
           <Select placeholder="Select bed type">
             {bedTypes.map((bed) => (
               <Option key={bed} value={bed}>
@@ -315,7 +326,28 @@ const RoomForm = () => {
         <Form.Item
           label="Room Number"
           name="roomNumber"
-          rules={[{ required: true }]}
+          rules={[
+            { required: true, message: "Room number is required" },
+            {
+              validator: (_, value) => {
+                if (value === undefined || value === null || value === "") {
+                  return Promise.resolve();
+                }
+                const num = Number(value);
+                if (!Number.isInteger(num)) {
+                  return Promise.reject(
+                    new Error("Room number must be an integer")
+                  );
+                }
+                if (num < 1 || num > 300) {
+                  return Promise.reject(
+                    new Error("Room number must be between 1 and 300")
+                  );
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
         >
           <Input
             type="number"
@@ -328,7 +360,7 @@ const RoomForm = () => {
         <Form.Item
           label="Room Category"
           name="roomCategory"
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: "Please select a room category" }]}
         >
           <Select placeholder="Select category">
             {categories.map((cat) => (
@@ -342,7 +374,23 @@ const RoomForm = () => {
         <Form.Item
           label="Price"
           name="roomPrice"
-          rules={[{ required: true, message: "Please enter a valid price" }]}
+          rules={[
+            { required: true, message: "Please enter a room price" },
+            {
+              validator: (_, value) => {
+                if (value === undefined || value === null || value === "") {
+                  return Promise.resolve();
+                }
+                const num = Number(value);
+                if (Number.isNaN(num) || num <= 0) {
+                  return Promise.reject(
+                    new Error("Price must be a positive number")
+                  );
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
         >
           <Input type="number" placeholder="Enter price" />
         </Form.Item>
@@ -350,7 +398,13 @@ const RoomForm = () => {
         <Form.Item
           label="Description"
           name="description"
-          rules={[{ required: true }]}
+          rules={[
+            { required: true, message: "Please enter a description" },
+            {
+              min: 20,
+              message: "Description must be at least 20 characters long",
+            },
+          ]}
         >
           <Input.TextArea rows={4} placeholder="Enter room description" />
         </Form.Item>
@@ -373,7 +427,11 @@ const RoomForm = () => {
           </Checkbox.Group>
         </Form.Item>
 
-        <Form.Item label="Hotel" name="hotel" rules={[{ required: true }]}>
+        <Form.Item
+          label="Hotel"
+          name="hotel"
+          rules={[{ required: true, message: "Please select a hotel" }]}
+        >
           <Select placeholder="Select hotel">
             {hotels.map((hotel) => (
               <Option key={hotel.id} value={hotel.id}>
