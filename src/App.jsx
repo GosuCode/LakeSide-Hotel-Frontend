@@ -19,6 +19,7 @@ import AppFooter from "./components/layout/AppFooter";
 import Checkout from "./components/booking/Checkout";
 import MainFooter from "./components/layout/MainFooter";
 import YourBookings from "./components/booking/YourBookings";
+import KhaltiMockPayment from "./components/payment/KhaltiMockPayment";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             <Route path="/nearby-hotels" element={<NearbyHotelsSearch />} />
             <Route path="/browse-all-rooms" element={<RoomListing />} />
             <Route path="/book-room/:roomId" element={<Checkout />} />
+            <Route path="/payment" element={<KhaltiMockPayment />} />
             <Route path="/booking-success" element={<BookingSuccess />} />
             <Route path="/my-bookings" element={<YourBookings />} />
             <Route path="/login" element={<Login />} />

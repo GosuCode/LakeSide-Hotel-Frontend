@@ -1,31 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import moment from "moment";
 import Button from "react-bootstrap/Button";
-import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 const BookingSummary = ({ booking, payment, isFormValid, onConfirm }) => {
   const checkInDate = moment(booking.checkInDate);
   const checkOutDate = moment(booking.checkOutDate);
   const numberOfDays = checkOutDate.diff(checkInDate, "days");
-  const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const navigate = useNavigate();
 
   const handleConfirmBooking = () => {
     setIsProcessingPayment(true);
     setTimeout(() => {
       setIsProcessingPayment(false);
-      setIsBookingConfirmed(true);
       onConfirm();
-    }, 3000);
+    }, 2000);
   };
-
-  useEffect(() => {
-    if (isBookingConfirmed) {
-      navigate("/booking-success");
-    }
-  }, [isBookingConfirmed, navigate]);
 
   return (
     <div className="row">
@@ -71,8 +61,7 @@ const BookingSummary = ({ booking, payment, isFormValid, onConfirm }) => {
 
             {isFormValid &&
             booking.phoneNumber &&
-            /^[0-9]{10}$/.test(booking.phoneNumber) &&
-            !isBookingConfirmed ? (
+            /^[0-9]{10}$/.test(booking.phoneNumber) ? (
               <Button variant="success" onClick={handleConfirmBooking}>
                 {isProcessingPayment ? (
                   <>
@@ -87,12 +76,6 @@ const BookingSummary = ({ booking, payment, isFormValid, onConfirm }) => {
                   "Confirm Booking & proceed to payment"
                 )}
               </Button>
-            ) : isBookingConfirmed ? (
-              <div className="d-flex justify-content-center align-items-center">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="sr-only">Loading...</span>
-                </div>
-              </div>
             ) : (
               <p className="text-danger mt-2">
                 Valid 10 digit phone number is required to confirm booking.
