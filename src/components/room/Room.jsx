@@ -23,7 +23,7 @@ const Room = () => {
     roomCategory: "",
     bedType: "",
     amenities: [],
-    availability: "all",
+    availability: "available",
     hotelId: "",
   });
 
@@ -52,7 +52,11 @@ const Room = () => {
     Promise.all([getAllRooms(), getAllHotels()])
       .then(([roomsData, hotelsData]) => {
         setData(roomsData);
-        setFilteredData(roomsData);
+        // By default, only show rooms that are not currently booked
+        const availableRooms = roomsData.filter(
+          (room) => !room.hasCurrentBookings || room.isAvailableForDates
+        );
+        setFilteredData(availableRooms);
         setHotels(hotelsData);
         setIsLoading(false);
       })
@@ -245,7 +249,11 @@ const Room = () => {
     }
 
     // Availability filter
-    if (filters.availability === "available") {
+    if (
+      filters.availability === "available" ||
+      filters.availability === "all"
+    ) {
+      // Hide rooms that are currently booked unless explicitly asking for "booked"
       filtered = filtered.filter(
         (room) => !room.hasCurrentBookings || room.isAvailableForDates
       );
@@ -259,12 +267,12 @@ const Room = () => {
 
   const clearFilters = () => {
     setFilters({
-      priceRange: [0, 1000],
+      priceRange: [0, 50000],
       roomType: "",
       roomCategory: "",
       bedType: "",
       amenities: [],
-      availability: "all",
+      availability: "available",
       hotelId: "",
     });
     setFilteredData(data);

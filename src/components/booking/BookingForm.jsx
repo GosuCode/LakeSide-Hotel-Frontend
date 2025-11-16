@@ -11,7 +11,7 @@ import {
 } from "antd";
 import toast from "react-hot-toast";
 import BookingSummary from "./BookingSummary";
-import { bookRoom, getRoomById, getRoomPricing } from "../utils/ApiFunctions";
+import { getRoomById, getRoomPricing } from "../utils/ApiFunctions";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { GMAIL_REGEX } from "../utils/constants";
 
@@ -113,15 +113,16 @@ const BookingForm = () => {
     setIsSubmitted(true);
   };
 
-  const handleConfirm = async () => {
-    try {
-      const confirmationCode = await bookRoom(roomId, booking);
-      toast.success("Booking confirmed successfully!");
-      navigate("/booking-success", { state: { message: confirmationCode } });
-    } catch (err) {
-      toast.error("Booking failed. Please try again.");
-      navigate("/booking-success", { state: { error: err.message } });
-    }
+  const handleConfirm = () => {
+    const paymentAmount = calculatePayment();
+
+    navigate("/payment", {
+      state: {
+        booking,
+        roomId,
+        amount: paymentAmount,
+      },
+    });
   };
 
   return (
@@ -170,12 +171,30 @@ const BookingForm = () => {
               <Input />
             </Form.Item>
 
-            <Form.Item label="Phone Number" name="phoneNumber">
-              <InputNumber
-                min={10}
-                max={10}
+            <Form.Item
+              label="Phone Number"
+              name="phoneNumber"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your phone number",
+                },
+                {
+                  pattern: /^[0-9]{10}$/,
+                  message: "Phone number must be valid 10 digit number",
+                },
+              ]}
+            >
+              <Input
                 placeholder="Enter your phone number"
-                style={{ width: "100%" }}
+                maxLength={10}
+                onChange={(e) => {
+                  const digitsOnly = e.target.value
+                    .replace(/\D/g, "")
+                    .slice(0, 10);
+                  e.target.value = digitsOnly;
+                  setBooking({ ...booking, phoneNumber: digitsOnly });
+                }}
               />
             </Form.Item>
 
@@ -205,12 +224,14 @@ const BookingForm = () => {
                       required: true,
                       type: "number",
                       min: 1,
+                      max: 4,
                       message: "At least 1 adult",
                     },
                   ]}
                 >
                   <InputNumber
                     min={1}
+                    max={4}
                     placeholder="Adults"
                     onChange={(value) =>
                       setBooking({ ...booking, numOfAdults: value })
@@ -219,10 +240,19 @@ const BookingForm = () => {
                 </Form.Item>
                 <Form.Item
                   name="numOfChildren"
-                  rules={[{ required: true, type: "number", min: 0 }]}
+                  rules={[
+                    {
+                      required: true,
+                      type: "number",
+                      min: 0,
+                      max: 4,
+                      message: "At least 0 and at most 4 children",
+                    },
+                  ]}
                 >
                   <InputNumber
                     min={0}
+                    max={4}
                     placeholder="Children"
                     onChange={(value) =>
                       setBooking({ ...booking, numOfChildren: value })

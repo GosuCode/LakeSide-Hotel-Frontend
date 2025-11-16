@@ -97,10 +97,6 @@ const YourBookings = () => {
     }
   };
 
-  const isUpcoming = (checkInDate) => {
-    return moment(checkInDate).isAfter(moment());
-  };
-
   return (
     <div
       style={{
@@ -164,14 +160,10 @@ const YourBookings = () => {
                 booking.checkInDate,
                 booking.checkOutDate
               );
-              const upcoming = isUpcoming(booking.checkInDate);
 
               return (
                 <Col xs={24} lg={12} xl={12} key={index}>
-                  <Badge.Ribbon
-                    text={upcoming ? "Upcoming" : "Past"}
-                    color={upcoming ? "gold" : "purple"}
-                  >
+                  <Badge.Ribbon color="purple">
                     <Card
                       style={{
                         borderRadius: "16px",
@@ -204,7 +196,8 @@ const YourBookings = () => {
                                   {booking.room.roomType}
                                 </Title>
                                 <Text type="secondary">
-                                  Room #{booking.room.id}
+                                  Room {booking.room.roomNumber} (ID #
+                                  {booking.room.id})
                                 </Text>
                               </div>
                             </Space>
@@ -351,7 +344,7 @@ const YourBookings = () => {
                           <Col span={8}>
                             <Statistic
                               title="Per Night"
-                              value={booking.room.roomPrice}
+                              value={booking.room.roomPrice.toFixed(0)}
                               prefix="Rs."
                               valueStyle={{
                                 fontSize: "16px",
@@ -362,7 +355,9 @@ const YourBookings = () => {
                           <Col span={8}>
                             <Statistic
                               title="Total"
-                              value={booking.room.roomPrice}
+                              value={(booking.room.roomPrice * nights).toFixed(
+                                0
+                              )}
                               prefix="Rs."
                               valueStyle={{
                                 fontSize: "16px",

@@ -39,6 +39,9 @@ const BookingSummary = ({ booking, payment, isFormValid, onConfirm }) => {
           Email: <strong>{booking.guestEmail}</strong>
         </p>
         <p>
+          Phone: <strong>{booking.phoneNumber}</strong>
+        </p>
+        <p>
           Check-in Date:{" "}
           <strong>{moment(booking.checkInDate).format("MMM Do YYYY")}</strong>
         </p>
@@ -63,10 +66,13 @@ const BookingSummary = ({ booking, payment, isFormValid, onConfirm }) => {
         {payment > 0 ? (
           <>
             <p>
-              Total payment: <strong>${payment}</strong>
+              Total payment: <strong>Rs.{payment}</strong>
             </p>
 
-            {isFormValid && !isBookingConfirmed ? (
+            {isFormValid &&
+            booking.phoneNumber &&
+            /^[0-9]{10}$/.test(booking.phoneNumber) &&
+            !isBookingConfirmed ? (
               <Button variant="success" onClick={handleConfirmBooking}>
                 {isProcessingPayment ? (
                   <>
@@ -87,7 +93,11 @@ const BookingSummary = ({ booking, payment, isFormValid, onConfirm }) => {
                   <span className="sr-only">Loading...</span>
                 </div>
               </div>
-            ) : null}
+            ) : (
+              <p className="text-danger mt-2">
+                Valid 10 digit phone number is required to confirm booking.
+              </p>
+            )}
           </>
         ) : (
           <p className="text-danger">

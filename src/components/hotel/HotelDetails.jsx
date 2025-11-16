@@ -151,7 +151,7 @@ const HotelDetails = () => {
                 </div>
               </div>
 
-              <Link to="/browse-all-rooms">
+              <Link to={`/hotel/${hotel.id}/rooms`}>
                 <Button type="primary" size="large" block>
                   View All Rooms
                 </Button>
